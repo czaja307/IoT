@@ -21,7 +21,7 @@ def read_tag(tag_id: int, db: Session = Depends(get_db)):
     return product
 
 
-@router.post("/", response_model=TagCreate, status_code=201)
+@router.post("/", response_model=Tag, status_code=201)
 def create_new_tag(tag: TagCreate, db: Session = Depends(get_db)):
     return create_tag(db, tag=tag)
 

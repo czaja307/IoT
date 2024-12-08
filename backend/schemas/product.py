@@ -10,7 +10,9 @@ class ProductBase(BaseModel):
 
     @field_validator("price")
     @classmethod
-    def round_price(cls, value: float) -> float:
+    def validate_price(cls, value: float) -> float:
+        if value < 0:
+            raise ValueError("Price must be greater or equal to 0")
         return round(value, 2)
 
 
@@ -26,4 +28,3 @@ class Product(ProductBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    # tags: List["Tag"] = []

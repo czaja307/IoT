@@ -27,12 +27,12 @@ def read_product(product_id: int, db: Session = Depends(get_db)):
     return product
 
 
-@router.post("/", response_model=ProductCreate, status_code=201)
+@router.post("/", response_model=Product, status_code=201)
 def create_new_product(product: ProductCreate, db: Session = Depends(get_db)):
     return create_product(db, product=product)
 
 
-@router.put("/{product_id}", response_model=ProductCreate)
+@router.put("/{product_id}", response_model=Product)
 def update_existing_product(product_id: int, product: ProductUpdate, db: Session = Depends(get_db)):
     updated_product = update_product(db, product_id=product_id, product=product)
     if not updated_product:

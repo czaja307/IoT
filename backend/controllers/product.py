@@ -3,10 +3,7 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from models.product import Product
-from schemas.product import Product as ProductSchema
 from schemas.product import ProductCreate, ProductUpdate
-
-ProductSchema.model_rebuild()
 
 
 def get_product(db: Session, product_id: int):
