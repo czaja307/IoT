@@ -3,11 +3,16 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 
 from models.product import Product
+from schemas.product import Product as ProductSchema
 from schemas.product import ProductCreate, ProductUpdate
+
+ProductSchema.model_rebuild()
 
 
 def get_product(db: Session, product_id: int):
-    return db.query(Product).filter(Product.id == product_id).first()
+    result = db.query(Product).filter(Product.id == product_id).first()
+    print(type(result))
+    return result
 
 
 def get_products(db: Session, skip: int = 0, limit: int = 10) -> List[Product]:
