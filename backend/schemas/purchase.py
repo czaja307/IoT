@@ -24,5 +24,5 @@ class Purchase(PurchaseCreate):
 
     id: int
     products: list[ProductQuantity]
-    # total_price: float
+    total_price: float
     created_at: datetime

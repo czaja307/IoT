@@ -15,10 +15,14 @@ def create_purchase(db: Session, purchase_data: PurchaseCreateSchema) -> Purchas
 
     # Validate products and prepare quantities
     product_quantities = {}
+    total_price = 0.0
+
     for product_item in purchase_data.products:
         product = db.query(ProductModel).filter(ProductModel.id == product_item.product_id).first()
         if not product:
             raise HTTPException(status_code=404, detail=f"Product with ID {product_item.product_id} not found")
+
+        total_price += product.price * product_item.quantity
         product_quantities[product.id] = product_quantities.get(product.id, 0) + product_item.quantity
 
     # Create purchase record
@@ -48,6 +52,7 @@ def create_purchase(db: Session, purchase_data: PurchaseCreateSchema) -> Purchas
     return PurchaseSchema(
         id=new_purchase.id,
         created_at=new_purchase.created_at,
+        total_price=total_price,
         products=purchase_products
     )
 
@@ -67,17 +72,20 @@ def get_purchase(db: Session, purchase_id: int) -> Optional[PurchaseSchema]:
 
     # Build the products list with full product details
     products = []
+    total_price = 0.0
     for pp in purchase_products:
         product = db.query(ProductModel).filter(ProductModel.id == pp.product_id).first()
         products.append({
             'product': product,
             'quantity': pp.quantity
         })
+        total_price += product.price * pp.quantity
 
     # Construct and return the purchase schema
     return PurchaseSchema(
         id=purchase.id,
         created_at=purchase.created_at,
+        total_price=total_price,
         products=products
     )
 
@@ -96,17 +104,20 @@ def get_purchases(db: Session, skip: int = 0, limit: int = 10) -> List[PurchaseS
 
         # Build the products list with full product details
         products = []
+        total_price = 0.0
         for pp in purchase_products:
             product = db.query(ProductModel).filter(ProductModel.id == pp.product_id).first()
             products.append({
                 'product': product,
                 'quantity': pp.quantity
             })
+            total_price += product.price * pp.quantity
 
         # Construct purchase response
         purchase_response = PurchaseSchema(
             id=purchase.id,
             created_at=purchase.created_at,
+            total_price=total_price,
             products=products
         )
         purchase_responses.append(purchase_response)
