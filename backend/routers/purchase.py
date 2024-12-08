@@ -8,7 +8,7 @@ from schemas.purchase import PurchaseCreate
 router = APIRouter()
 
 
-@router.post("/", response_model=PurchaseCreate)
+@router.post("/", response_model=PurchaseCreate, status_code=201)
 def create_new_purchase(purchase: PurchaseCreate, db: Session = Depends(get_db)):
     return create_purchase(db, purchase=purchase)
 

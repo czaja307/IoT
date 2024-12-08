@@ -8,7 +8,7 @@ from schemas.tag import TagCreate
 router = APIRouter()
 
 
-@router.post("/", response_model=TagCreate)
+@router.post("/", response_model=TagCreate, status_code=201)
 def create_new_tag(tag: TagCreate, db: Session = Depends(get_db)):
     return create_tag(db, tag=tag)
 
