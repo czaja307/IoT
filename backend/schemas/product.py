@@ -2,8 +2,6 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from schemas import Tag
-
 
 class ProductBase(BaseModel):
     name: str
@@ -21,7 +19,7 @@ class ProductUpdate(ProductBase):
 
 class Product(ProductBase):
     id: int
-    tags: List[Tag] = []
+    tags: List["Tag"] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True

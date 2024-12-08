@@ -15,4 +15,4 @@ class PurchaseProduct(Base):
     purchase = relationship("Purchase")
     product = relationship("Product")
 
-    __table_args__ = (UniqueConstraint('purchase_id', 'product_id', name='uix_product_purchase'))
+    UniqueConstraint('purchase_id', 'product_id', name='uix_product_purchase')

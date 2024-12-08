@@ -1,7 +1,5 @@
 from pydantic import BaseModel, Field
 
-from pydantic import BaseModel, Field
-
 from schemas import Product, Purchase
 
 
@@ -21,4 +19,4 @@ class PurchaseProduct(PurchaseProductBase):
     purchase: Purchase
 
     class Config:
-        orm_mode = True
+        from_attributes = True
