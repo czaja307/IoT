@@ -1,16 +1,21 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+
+from schemas import Product
 
 
 class TagBase(BaseModel):
-    product_id: int
+    id: int
 
 
 class TagCreate(TagBase):
-    pass
+    product_id: int
+
+
+class TagUpdate(TagBase):
+    product_id: int
 
 
 class Tag(TagBase):
-    id: int
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    product: Product

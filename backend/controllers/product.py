@@ -10,9 +10,7 @@ ProductSchema.model_rebuild()
 
 
 def get_product(db: Session, product_id: int):
-    result = db.query(Product).filter(Product.id == product_id).first()
-    print(type(result))
-    return result
+    return db.query(Product).filter(Product.id == product_id).first()
 
 
 def get_products(db: Session, skip: int = 0, limit: int = 10) -> List[Product]:
