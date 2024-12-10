@@ -10,6 +10,14 @@ class CommunicationsInterface(ABC):
     def send_message(self, message):
         pass
 
+    @abstractmethod
+    def on_start(self):
+        pass
+
+    @abstractmethod
+    def on_cleanup(self):
+        pass
+
     def process_response(self, response):
         self._on_server_response(response)
     
@@ -18,5 +26,5 @@ class CommunicationsInterface(ABC):
         ip_address = socket.gethostbyname(hostname)
         return ip_address
     
-    def assign_terminal_response_action(self, action):
+    def assign_response_action(self, action):
         self._on_server_response = action
