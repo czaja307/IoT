@@ -20,7 +20,7 @@ class CheckoutCommunications(CommunicationsInterface):
 
     def on_cleanup(self):
         super().on_cleanup()
-        self.stop_mosquitton()
+        self.stop_mosquitto()
 
     def on_message(self, client, userdata, message):
         self.process_response(message)
