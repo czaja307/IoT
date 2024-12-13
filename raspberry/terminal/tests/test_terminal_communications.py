@@ -60,7 +60,7 @@ def test_stop_mosquitto(comms):
     comms.topic = "test/topic"
     
     # Call stop_mosquitto
-    comms.stop_mosquitton()
+    comms.stop_mosquitto()
    
     comms.client.unsubscribe.assert_called_once_with("test/topic")
     comms.client.loop_stop.assert_called_once()

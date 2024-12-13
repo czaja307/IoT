@@ -16,14 +16,12 @@ class TerminalInteractions(InteractionsInterface):
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
         self.setupButtons()
-        print("QUit assigned")
+        print("Quit assigned")
 
     def quit_sig_sent(self):
         self.quitting = True
         try:
-            print("2")
             GPIO.cleanup()
-            print("3")
             super().quit_sig_sent()
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")

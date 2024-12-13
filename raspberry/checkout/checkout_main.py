@@ -11,7 +11,7 @@ class CheckoutApp:
         self.communications.on_cleanup()
         quit()
 
-    def server_response_recieved(self, response):
+    def server_response_received(self, response):
         pass
 
     def finish_checkout(self):
@@ -28,7 +28,7 @@ class CheckoutApp:
         self.interactions.assign_quit_action(self.quit_actions)
 
         self.communications = CheckoutCommunications()
-        self.communications.assign_response_action(self.server_response_recieved)
+        self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
 
 

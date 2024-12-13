@@ -21,7 +21,7 @@ class TerminalCommunications(CommunicationsInterface):
 
     def on_cleanup(self):
         super().on_cleanup()
-        self.stop_mosquitton()
+        self.stop_mosquitto()
 
 
     def greeting_from_server(self, client, userdata, message):
@@ -42,7 +42,7 @@ class TerminalCommunications(CommunicationsInterface):
         self.client.publish(GREETING_TOPIC, self.get_ip_address())
         print("mosquitto ")
 
-    def stop_mosquitton(self):
+    def stop_mosquitto(self):
         self.client.unsubscribe(self.topic)
         self.client.loop_stop()
         self.client.disconnect()

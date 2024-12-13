@@ -43,7 +43,7 @@ class CheckoutCommunications(CommunicationsInterface):
         self.client.publish(GREETING_TOPIC, self.get_ip_address())
         print("mosquitto ")
 
-    def stop_mosquitton(self):
+    def stop_mosquitto(self):
         self.client.unsubscribe(self.topic)
         self.client.loop_stop()
         self.client.disconnect()
