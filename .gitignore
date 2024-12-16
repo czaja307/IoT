@@ -1,0 +1,6 @@
+.idea
+.env
+.venv
+.cache
+.DS_Store
+*.db
