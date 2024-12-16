@@ -28,7 +28,7 @@ pytest raspberry/terminal/tests
 
 ### Setting environmental variables
 
-Set your PostgreSQL database connection URL in the environment file. For other database engines, some changes may be
+Set your SQLite database path in the `.env` file. The default should be fine in most cases. For other database engines, some changes may be
 required in `backend/database.py`.
 
 ```bash
