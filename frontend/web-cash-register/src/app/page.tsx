@@ -45,6 +45,12 @@ export default function Home() {
     }
   };
 
+  const handleAssign = (id: number) => {
+    if (confirm("Czy na pewno chcesz przypisać ten produkt?")) {
+      deleteMutation.mutate(id.toString());
+    }
+  };
+
   return (
     <div className={"flex flex-col justify-center items-center mt-4 space-y-6"}>
       {products.length === 0 ? (
