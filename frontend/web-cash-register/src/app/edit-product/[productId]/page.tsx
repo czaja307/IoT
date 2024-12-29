@@ -1,8 +1,8 @@
-'use client'
-import {useParams} from "next/navigation";
-import {ProductForm} from "@/components/ProductForm";
+"use client";
+import { useParams } from "next/navigation";
+import { ProductForm } from "@/components/ProductForm";
 import Link from "next/link";
-import {ArrowLeftIcon} from "@radix-ui/react-icons";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 export default function EditProductPage(){
     const productId = useParams().productId;
