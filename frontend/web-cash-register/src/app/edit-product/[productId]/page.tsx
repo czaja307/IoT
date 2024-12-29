@@ -12,7 +12,7 @@ export default function EditProductPage(){
         <div>
             <div
                 className={'flex border-2 border-gray-200 w-8 h-8 items-center justify-center rounded-lg m-4 hover:bg-gray-100'}>
-                <Link href={'/admin'}>
+                <Link href={'/'}>
                     <ArrowLeftIcon/>
                 </Link>
             </div>
