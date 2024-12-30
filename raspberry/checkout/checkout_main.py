@@ -20,6 +20,11 @@ class CheckoutApp:
     def cancel_checkout(self):
         pass
 
+    def process_rfid_card(self, uid):
+        self.last_scanned_item = uid
+        print(f"Scanned item: {uid}")
+        self.communications.send_message(f"checkout#{uid}")
+
     def main(self):
         print('Hello, World!')
         self.interactions = CheckoutInteractions()
@@ -30,6 +35,8 @@ class CheckoutApp:
         self.communications = CheckoutCommunications()
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
+
+        self.interactions.start_rfid_listener(self.process_rfid_card)
 
 
 if __name__ == '__main__':
