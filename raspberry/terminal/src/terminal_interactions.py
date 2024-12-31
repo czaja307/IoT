@@ -29,8 +29,7 @@ class TerminalInteractions(InteractionsInterface):
             super().quit_sig_sent()
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")
-        
-        
+         
 
     def redButtonPressed(self, channel):
         start_time = time.time()
@@ -43,6 +42,14 @@ class TerminalInteractions(InteractionsInterface):
         GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=200)
 
 
+    def buzzer(self, state):
+        GPIO.output(buzzerPin, not state)
+
+    def run_buzzer():
+    	self.buzzer(True)
+		time.sleep(0.5)
+		self.buzzer(False)
+
     def start_rfid_listener(self, on_card_read_callback):
     	print("Starting RFID listener...")
 		self.rfid.assign_card_read_callback(on_card_read_callback)
@@ -50,6 +57,7 @@ class TerminalInteractions(InteractionsInterface):
 			while not self.quitting:
 				uid = self.rfid.read_rfid()
 				if uid:
+                    self.run_buzzer()
 					on_card_read_callback(uid)
 				time.sleep(1)
 		except KeyboardInterrupt:
