@@ -7,6 +7,8 @@ try:
 except:
     import Mock.GPIO as GPIO
 import time
+import board
+import neopixel
 
 class CheckoutInteractions(InteractionsInterface):
 
@@ -14,6 +16,7 @@ class CheckoutInteractions(InteractionsInterface):
         super().__init__()
         self.quitting = False
         self.rfid = RFIDInterface()
+        self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
         
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
@@ -23,7 +26,7 @@ class CheckoutInteractions(InteractionsInterface):
     def quit_sig_sent(self):
         self.quitting = True
         try:
-            GPIO.cleanup()
+            self.cleanup()
             self.rfid_reader.cleanup()
             super().quit_sig_sent()
         except Exception as e:
@@ -49,10 +52,31 @@ class CheckoutInteractions(InteractionsInterface):
     def buzzer(self, state):
         GPIO.output(buzzerPin, not state)
 
-    def run_buzzer():
+    def run_buzzer(self):
     	self.buzzer(True)
+
+    def stop_buzzer(self):
+        self.buzzer(False)
+
+    def set_pixels_color(self, color):
+        self.pixels.fill(color)
+		self.pixels.show()
+
+    def indicate_success(self):
+        self.set_pixels_color((0, 255, 0))
+        self.run_buzzer()
+        time.sleep(0.5)
+        self.pixels.fill((0, 0, 0))
+        self.stop_buzzer()
+
+    def indicate_error(self):
+        self.set_pixels_color((255, 0, 0))
 		time.sleep(0.5)
-		self.buzzer(False)
+		self.pixels.fill((0, 0, 0))
+
+    def cleanup(self):
+        self.set_pixels_color((0, 0, 0)) 
+        GPIO.cleanup()
 
 
     def start_rfid_listener(self, on_card_read_callback):
@@ -62,8 +86,10 @@ class CheckoutInteractions(InteractionsInterface):
             while not self.quitting:
 			    uid = self.rfid.read_rfid()
 			    if uid:
-                    self.run_buzzer()
+                    self.indicate_success()
 				    on_card_read_callback(uid)
+                else:
+                    self.indicate_error()
                 time.sleep(1)
 		except KeyboardInterrupt:
             self.quit_sig_sent()
