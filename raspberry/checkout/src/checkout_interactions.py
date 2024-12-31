@@ -46,6 +46,14 @@ class CheckoutInteractions(InteractionsInterface):
         GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=200)
         GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=self.greenButtonPressed, bouncetime=200)
 
+    def buzzer(self, state):
+        GPIO.output(buzzerPin, not state)
+
+    def run_buzzer():
+    	self.buzzer(True)
+		time.sleep(0.5)
+		self.buzzer(False)
+
 
     def start_rfid_listener(self, on_card_read_callback):
         print("Starting RFID listener...")
@@ -54,6 +62,7 @@ class CheckoutInteractions(InteractionsInterface):
             while not self.quitting:
 			    uid = self.rfid.read_rfid()
 			    if uid:
+                    self.run_buzzer()
 				    on_card_read_callback(uid)
                 time.sleep(1)
 		except KeyboardInterrupt:
