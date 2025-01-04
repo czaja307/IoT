@@ -40,11 +40,9 @@ class CheckoutInteractions(InteractionsInterface):
         if not self.quitting and GPIO.input(channel) == GPIO.HIGH:
             self.cancel_sig_sent()
 
-
     def greenButtonPressed(self, channel):
         self.confirm_sig_sent()
        
-
     def setupButtons(self):
         GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=200)
         GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=self.greenButtonPressed, bouncetime=200)
@@ -53,14 +51,14 @@ class CheckoutInteractions(InteractionsInterface):
         GPIO.output(buzzerPin, not state)
 
     def run_buzzer(self):
-    	self.buzzer(True)
+        self.buzzer(True)
 
     def stop_buzzer(self):
         self.buzzer(False)
 
     def set_pixels_color(self, color):
         self.pixels.fill(color)
-		self.pixels.show()
+        self.pixels.show()
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
@@ -71,25 +69,22 @@ class CheckoutInteractions(InteractionsInterface):
 
     def indicate_error(self):
         self.set_pixels_color((255, 0, 0))
-		time.sleep(0.5)
-		self.pixels.fill((0, 0, 0))
+        time.sleep(0.5)
+        self.pixels.fill((0, 0, 0))
 
     def cleanup(self):
         self.set_pixels_color((0, 0, 0)) 
         GPIO.cleanup()
 
-
-    def start_rfid_listener(self, on_card_read_callback):
+    def start_rfid_listener(self):
         print("Starting RFID listener...")
-        self.rfid.assign_card_read_callback(on_card_read_callback)
-	    try:
+        try:
             while not self.quitting:
-			    uid = self.rfid.read_rfid()
-			    if uid:
+                uid = self.rfid.read_rfid()
+                if uid:
                     self.indicate_success()
-				    on_card_read_callback(uid)
                 else:
                     self.indicate_error()
                 time.sleep(1)
-		except KeyboardInterrupt:
+        except KeyboardInterrupt:
             self.quit_sig_sent()

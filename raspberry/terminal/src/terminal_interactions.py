@@ -49,14 +49,14 @@ class TerminalInteractions(InteractionsInterface):
         GPIO.output(buzzerPin, not state)
 
     def run_buzzer(self):
-    	self.buzzer(True)
+        self.buzzer(True)
 
     def stop_buzzer(self):
         self.buzzer(False)
 
     def set_pixels_color(self, color):
         self.pixels.fill(color)
-		self.pixels.show()
+        self.pixels.show()
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
@@ -67,24 +67,22 @@ class TerminalInteractions(InteractionsInterface):
 
     def indicate_error(self):
         self.set_pixels_color((255, 0, 0))
-		time.sleep(0.5)
-		self.pixels.fill((0, 0, 0))
+        time.sleep(0.5)
+        self.pixels.fill((0, 0, 0))
 
     def cleanup(self):
         self.set_pixels_color((0, 0, 0)) 
         GPIO.cleanup()
 
-    def start_rfid_listener(self, on_card_read_callback):
-    	print("Starting RFID listener...")
-		self.rfid.assign_card_read_callback(on_card_read_callback)
-		try:
-			while not self.quitting:
-				uid = self.rfid.read_rfid()
-				if uid:
+    def start_rfid_listener(self):
+        print("Starting RFID listener...")
+        try:
+            while not self.quitting:
+                uid = self.rfid.read_rfid()
+                if uid:
                     self.indicate_success()
-					on_card_read_callback(uid)
-				else:
+                else:
                     self.indicate_error()
                 time.sleep(1)
-		except KeyboardInterrupt:
-			self.quit_sig_sent()
+        except KeyboardInterrupt:
+            self.quit_sig_sent()

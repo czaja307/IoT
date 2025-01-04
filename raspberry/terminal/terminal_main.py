@@ -14,12 +14,10 @@ class TerminalApp:
         self.communications.on_cleanup()
         quit()
 
-
     def process_rfid_card(self, uid):
         self.last_scanned_item = uid
         print(f"Scanned item: {uid}")
         self.communications.send_message(f"terminal#{uid}")
-
 
     def main(self):
         print('Hello, World!')
@@ -31,9 +29,8 @@ class TerminalApp:
         
         self.interactions.start_rfid_listener(self.process_rfid_card)
 
-
-
 if __name__ == '__main__':
     app = TerminalApp()
     app.main()
     
+
