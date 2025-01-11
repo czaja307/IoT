@@ -34,14 +34,16 @@ class CheckoutCommunications(CommunicationsInterface):
                 self.client.unsubscribe(GREETING_TOPIC)
                 self.topic = f"{CHECKOUT_TOPIC}{parts[2]}/"
                 self.client.on_message = self.on_message
-                self.client.subscribe(self.topic)
+                self.client.subscribe(f"{self.topic}resp/")
+                print("registered a checkout")
+
 
     def start_mosquitto(self):
         self.client.connect(self.broker)
         self.client.on_message = self.greeting_from_server
         self.client.loop_start()
         self.client.subscribe(GREETING_TOPIC)
-        self.client.publish(GREETING_TOPIC, self.get_ip_address())
+        self.client.publish(GREETING_TOPIC, f"{CHECKOUT_TOPIC}#{self.get_ip_address()}")
         print("mosquitto ")
 
     def stop_mosquitto(self):

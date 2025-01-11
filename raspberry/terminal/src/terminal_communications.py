@@ -10,7 +10,6 @@ class TerminalCommunications(CommunicationsInterface):
         self.broker = MQTT_BROKER
         self.topic = ""
         
-
     def send_message(self, message):
         self.client.publish(self.topic, message)
 
@@ -23,7 +22,6 @@ class TerminalCommunications(CommunicationsInterface):
         super().on_cleanup()
         self.stop_mosquitto()
 
-
     def greeting_from_server(self, client, userdata, message):
         message_decoded = (str(message.payload.decode("utf-8")))
         parts = message_decoded.split("#")
@@ -32,14 +30,14 @@ class TerminalCommunications(CommunicationsInterface):
                 self.client.unsubscribe(GREETING_TOPIC)
                 self.topic = f"{TERMINAL_TOPIC}{parts[2]}/"
                 self.client.on_message = None
-
+                print("registered a teminal")
 
     def start_mosquitto(self):
         self.client.connect(self.broker)
         self.client.on_message = self.greeting_from_server
         self.client.loop_start()
         self.client.subscribe(GREETING_TOPIC)
-        self.client.publish(GREETING_TOPIC, self.get_ip_address())
+        self.client.publish(GREETING_TOPIC, f"{TERMINAL_TOPIC}#{self.get_ip_address()}")
         print("mosquitto ")
 
     def stop_mosquitto(self):
