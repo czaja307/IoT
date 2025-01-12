@@ -1,9 +1,8 @@
 from typing import List, Optional
-
+from schemas.product import ProductCreate, ProductUpdate, ProductCount
 from sqlalchemy.orm import Session
-
-from models.product import Product
-from schemas.product import ProductCreate, ProductUpdate
+from models import Product, Tag
+from sqlalchemy import func
 
 
 def get_product(db: Session, product_id: int):
@@ -39,3 +38,19 @@ def delete_product(db: Session, product_id: int) -> bool:
         db.commit()
         return True
     return False
+
+
+def get_products_count(db: Session) -> list[ProductCount]:
+    product_counts = (
+        db.query(Product.id, Product.name, func.count(Tag.id).label('count'))
+        .outerjoin(Tag, Tag.product_id == Product.id)
+        .group_by(Product.id)
+        .all()
+    )
+
+    product_count_list = [
+        ProductCount(id=product.id, name=product.name, count=product.count)
+        for product in product_counts
+    ]
+
+    return product_count_list

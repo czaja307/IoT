@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from raspberry_interactions import ServerCommunications, RaspberryMsgHandling
 from database import Base, engine
@@ -13,11 +13,13 @@ msg_handling = RaspberryMsgHandling()
 talk_to_raspberries.set_on_terminal_msg(msg_handling.on_terminal_msg)
 talk_to_raspberries.set_on_checkout_msg(msg_handling.on_checkout_msg)
 
+
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     talk_to_raspberries.on_start()
     yield
     talk_to_raspberries.on_cleanup()
+
 
 app = FastAPI(lifespan=lifespan)
 
@@ -25,6 +27,7 @@ origins = [
     "http://localhost:3000"
 ]
 
+# noinspection PyTypeChecker
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -34,5 +37,3 @@ app.add_middleware(
 )
 
 app.include_router(router)
-
-
