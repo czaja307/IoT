@@ -24,6 +24,7 @@ class CheckoutCommunications(CommunicationsInterface):
 
     def on_message(self, client, userdata, message):
         message_decoded = (str(message.payload.decode("utf-8")))
+        print(message_decoded)
         self.process_response(message_decoded)
 
     def greeting_from_server(self, client, userdata, message):

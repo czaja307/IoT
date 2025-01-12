@@ -1,5 +1,6 @@
 from .src import CheckoutInteractions
 from .src import CheckoutCommunications
+import time
 
 class CheckoutApp:
 
@@ -30,6 +31,10 @@ class CheckoutApp:
         self.communications = CheckoutCommunications()
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
+        time.sleep(1)
+        self.communications.send_message("3")
+        while(True):
+            time.sleep(1)
 
 
 if __name__ == '__main__':

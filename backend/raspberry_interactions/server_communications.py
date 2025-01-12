@@ -27,15 +27,27 @@ class ServerCommunications():
         if GREETING_TOPIC in msg_topic:
             self.greeting_from_raspberry(message_decoded)
         elif CHECKOUT_TOPIC in msg_topic:
-            self.checkout_message(message_decoded)
+            response = self.checkout_message(message_decoded)
+            self.send_message(f"{msg_topic}resp/", response)
         elif TERMINAL_TOPIC in msg_topic:
             self.terminal_message(message_decoded)
 
+    def set_on_terminal_msg(self, func):
+        self.on_terminal_msg = func
+
+    def set_on_checkout_msg(self, func):
+        self.on_checkout_msg = func
+
     def checkout_message(self, message):
         print(f"checkout: {message}")
+        if self.on_checkout_msg:
+            return self.on_checkout_msg(message)
+        return None
 
     def terminal_message(self, message):
         print(f"terminal: {message}")
+        if self.on_terminal_msg:
+            self.on_terminal_msg(message)
 
     def greeting_from_raspberry(self, message):
         parts = message.split("#")
