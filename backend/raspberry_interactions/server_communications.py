@@ -1,15 +1,17 @@
-
 from .mqtt_conf import *
 import paho.mqtt.client as mqtt
+from decorators import singleton
 
+
+@singleton
 class ServerCommunications:
 
     def __init__(self):
         self.client = mqtt.Client()
         self.broker = MQTT_BROKER
         self.subscribed_topics = [GREETING_TOPIC]
-        self.registered_checkouts = 0 
-        self.registered_terminals = 0 
+        self.registered_checkouts = 0
+        self.registered_terminals = 0
         self.on_checkout_msg = None
         self.on_terminal_msg = None
 
@@ -66,7 +68,6 @@ class ServerCommunications:
                 self.subscribed_topics.append(f"{TERMINAL_TOPIC}{self.registered_terminals}/")
                 self.send_message(GREETING_TOPIC, f"for#{parts[1]}#{self.registered_terminals}")
             print(f"registered t: {self.registered_terminals}, c: {self.registered_checkouts}")
-            
 
     def start_mosquitto(self):
         self.client.connect(self.broker)
@@ -81,6 +82,3 @@ class ServerCommunications:
         self.client.loop_stop()
         self.client.disconnect()
         print("End of the show")
-
-
-    
