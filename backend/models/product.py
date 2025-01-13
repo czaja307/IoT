@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, Text, Float
 from sqlalchemy.orm import relationship
 
 from database import Base
-import json
 
 class Product(Base):
     __tablename__ = 'products'
