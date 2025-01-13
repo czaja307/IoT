@@ -7,6 +7,6 @@ class TerminalBase(BaseModel):
     id: int
 
 
-class ProductTerminalAssignment(BaseModel):
+class TerminalProductAssignment(BaseModel):
     terminal_id: int
     product_id: Optional[int] = None
