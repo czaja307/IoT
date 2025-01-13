@@ -85,6 +85,6 @@ class CheckoutInteractions(InteractionsInterface):
                     self.indicate_success()
                 else:
                     self.indicate_error()
-                time.sleep(0.5)
+                time.sleep(0.3)
         except KeyboardInterrupt:
             self.quit_sig_sent()
