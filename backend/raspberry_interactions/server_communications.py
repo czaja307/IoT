@@ -56,24 +56,35 @@ class ServerCommunications:
         if self.on_terminal_msg:
             self.on_terminal_msg(message)
 
+    def register_device(self, topic_type, ip, registered_count, registered_list):
+        registered_count += 1
+        topic = f"{topic_type}{registered_count}/"
+
+        self.client.subscribe(topic)
+        self.subscribed_topics.append(topic)
+        self.send_message(GREETING_TOPIC, f"for#{ip}#{registered_count}")
+        registered_list.append(registered_count)
+
+        if topic_type == TERMINAL_TOPIC:
+            self.terminals_products_dict[self.registered_terminals_count] = None
+
     def greeting_from_raspberry(self, message):
+        print("message received")
         parts = message.split("#")
-        if len(parts) == 2:
-            print("message received")
-            if parts[0] == CHECKOUT_TOPIC:
-                self.registered_checkouts_count += 1
-                self.client.subscribe(f"{CHECKOUT_TOPIC}{self.registered_checkouts_count}/")
-                self.subscribed_topics.append(f"{CHECKOUT_TOPIC}{self.registered_checkouts_count}/")
-                self.send_message(GREETING_TOPIC, f"for#{parts[1]}#{self.registered_checkouts_count}")
-                self.registered_checkouts.append(self.registered_checkouts_count)
-            elif parts[0] == TERMINAL_TOPIC:
-                self.registered_terminals_count += 1
-                self.client.subscribe(f"{TERMINAL_TOPIC}{self.registered_terminals_count}/")
-                self.subscribed_topics.append(f"{TERMINAL_TOPIC}{self.registered_terminals_count}/")
-                self.send_message(GREETING_TOPIC, f"for#{parts[1]}#{self.registered_terminals_count}")
-                self.registered_terminals.append(self.registered_terminals_count)
-                self.terminals_products_dict[self.registered_terminals_count] = None
-            print(f"registered t: {self.registered_terminals}, c: {self.registered_checkouts}")
+
+        if len(parts) != 2:
+            print("wrong message format")
+            return
+
+        if parts[0] == CHECKOUT_TOPIC:
+            self.register_device(CHECKOUT_TOPIC, parts[1], self.registered_checkouts_count, self.registered_checkouts)
+        elif parts[0] == TERMINAL_TOPIC:
+            self.register_device(TERMINAL_TOPIC, parts[1], self.registered_terminals_count, self.registered_terminals)
+        else:
+            print("incorrect topic")
+            return
+
+        print(f"registered t: {self.registered_terminals}, c: {self.registered_checkouts}")
 
     def start_mosquitto(self):
         self.client.connect(self.broker)
