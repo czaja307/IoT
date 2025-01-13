@@ -2,6 +2,10 @@ from .src import TerminalInteractions
 from .src import TerminalCommunications
 import time
 class TerminalApp:
+    def __init__(self):
+        self.communications = None
+        self.interactions = None
+
     def quit_actions(self):
         print("Quitting app")
         self.communications.on_cleanup()

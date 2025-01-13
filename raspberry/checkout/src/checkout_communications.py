@@ -36,7 +36,7 @@ class CheckoutCommunications(CommunicationsInterface):
                 self.topic = f"{CHECKOUT_TOPIC}{parts[2]}/"
                 self.client.on_message = self.on_message
                 self.client.subscribe(f"{self.topic}resp/")
-                print("registered a checkout")
+                print("Checkout is ready to send and recieve messages!")
 
 
     def start_mosquitto(self):

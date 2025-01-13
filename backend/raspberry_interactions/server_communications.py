@@ -10,6 +10,8 @@ class ServerCommunications:
         self.subscribed_topics = [GREETING_TOPIC]
         self.registered_checkouts = 0 
         self.registered_terminals = 0 
+        self.on_checkout_msg = None
+        self.on_terminal_msg = None
 
     def on_start(self):
         self.start_mosquitto()

@@ -6,6 +6,8 @@ class CheckoutApp:
 
     def __init__(self):
         self.last_scanned_item = None
+        self.communications = None
+        self.interactions = None
 
     def quit_actions(self):
         print("Quitting app")

@@ -13,14 +13,3 @@ class Product(Base):
     price = Column(Float, nullable=False)
 
     tags = relationship("Tag", back_populates="product")
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "price": self.price,
-        }
-
-    def to_json(self):
-        return json.dumps(self.to_dict())

@@ -30,7 +30,7 @@ class TerminalCommunications(CommunicationsInterface):
                 self.client.unsubscribe(GREETING_TOPIC)
                 self.topic = f"{TERMINAL_TOPIC}{parts[2]}/"
                 self.client.on_message = None
-                print("registered a terminal")
+                print("Treminal is ready to send messages.")
 
     def start_mosquitto(self):
         self.client.connect(self.broker)

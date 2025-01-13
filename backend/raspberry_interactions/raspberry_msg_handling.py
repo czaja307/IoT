@@ -1,7 +1,8 @@
 from controllers.tag import create_tag, update_tag, get_tag
 from schemas.tag import TagCreate, TagUpdate
 from database import get_db
-from models.product import Product
+from models.product import Product as mProduct
+from schemas.product import Product as sProduct
 
 class RaspberryMsgHandling:
     @staticmethod
@@ -23,6 +24,6 @@ class RaspberryMsgHandling:
         get_db_v = get_db()
         db = next(get_db_v)
         tag_from_db = get_tag(db, tag)
-        product: Product = tag_from_db.product
-        print(product.to_json())
-        return product.to_json()
+        s_prod = sProduct.model_validate(tag_from_db.product)
+        print(s_prod.model_dump())
+        return str(s_prod.model_dump())
