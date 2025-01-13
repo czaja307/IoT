@@ -1,10 +1,13 @@
 from .src import CheckoutInteractions
 from .src import CheckoutCommunications
+import time
 
 class CheckoutApp:
 
     def __init__(self):
         self.last_scanned_item = None
+        self.communications = None
+        self.interactions = None
 
     def quit_actions(self):
         print("Quitting app")
@@ -30,6 +33,10 @@ class CheckoutApp:
         self.communications = CheckoutCommunications()
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
+        time.sleep(1)
+        self.communications.send_message("3")
+        while True:
+            time.sleep(1)
 
 
 if __name__ == '__main__':
