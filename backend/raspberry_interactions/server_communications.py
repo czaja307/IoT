@@ -57,7 +57,6 @@ class ServerCommunications:
             self.on_terminal_msg(message)
 
     def register_device(self, topic_type, ip, registered_count, registered_list):
-        registered_count += 1
         topic = f"{topic_type}{registered_count}/"
 
         self.client.subscribe(topic)
@@ -77,14 +76,16 @@ class ServerCommunications:
             return
 
         if parts[0] == CHECKOUT_TOPIC:
+            self.registered_checkouts_count += 1
             self.register_device(CHECKOUT_TOPIC, parts[1], self.registered_checkouts_count, self.registered_checkouts)
         elif parts[0] == TERMINAL_TOPIC:
+            self.registered_terminals_count += 1
             self.register_device(TERMINAL_TOPIC, parts[1], self.registered_terminals_count, self.registered_terminals)
         else:
             print("incorrect topic")
             return
 
-        print(f"registered t: {self.registered_terminals}, c: {self.registered_checkouts}")
+        print(f"registered successfully t: {self.registered_terminals}, c: {self.registered_checkouts}")
 
     def start_mosquitto(self):
         self.client.connect(self.broker)
