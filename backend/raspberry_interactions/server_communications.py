@@ -1,5 +1,5 @@
 
-from .mqqt_conf import *
+from .mqtt_conf import *
 import paho.mqtt.client as mqtt
 
 class ServerCommunications:
