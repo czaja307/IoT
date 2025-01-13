@@ -1,3 +1,5 @@
+from typing import List, Optional, Callable, Dict
+
 from .mqtt_conf import *
 import paho.mqtt.client as mqtt
 from decorators import singleton
@@ -10,13 +12,13 @@ class ServerCommunications:
         self.client = mqtt.Client()
         self.broker = MQTT_BROKER
         self.subscribed_topics = [GREETING_TOPIC]
-        self.registered_checkouts = []
-        self.registered_checkouts_count = 0
-        self.registered_terminals = []
-        self.registered_terminals_count = 0
-        self.on_checkout_msg = None
-        self.on_terminal_msg = None
-        self.terminals_products_dict = {}
+        self.registered_checkouts: List[int] = []
+        self.registered_checkouts_count: int = 0
+        self.registered_terminals: List[int] = []
+        self.registered_terminals_count: int = 0
+        self.on_checkout_msg: Optional[Callable] = None
+        self.on_terminal_msg: Optional[Callable] = None
+        self.terminals_products_dict: Dict[int, Optional[int]] = {}
 
     def on_start(self):
         self.start_mosquitto()
@@ -56,7 +58,7 @@ class ServerCommunications:
         if self.on_terminal_msg:
             self.on_terminal_msg(message)
 
-    def register_device(self, topic_type, ip, registered_count, registered_list):
+    def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: List[int]) -> None:
         topic = f"{topic_type}{registered_count}/"
 
         self.client.subscribe(topic)
