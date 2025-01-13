@@ -33,7 +33,7 @@ class CheckoutApp:
         self.communications.on_start()
         time.sleep(1)
         self.communications.send_message("3")
-        while(True):
+        while True:
             time.sleep(1)
 
 

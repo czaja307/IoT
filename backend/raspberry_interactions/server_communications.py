@@ -2,7 +2,7 @@
 from .mqqt_conf import *
 import paho.mqtt.client as mqtt
 
-class ServerCommunications():
+class ServerCommunications:
 
     def __init__(self):
         self.client = mqtt.Client()

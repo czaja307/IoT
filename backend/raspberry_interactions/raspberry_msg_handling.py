@@ -2,10 +2,10 @@ from controllers.tag import create_tag, update_tag, get_tag
 from schemas.tag import TagCreate, TagUpdate
 from database import get_db
 from models.product import Product
-import json
 
-class RaspberryMsgHandling():
-    def on_terminal_msg(self, msg):
+class RaspberryMsgHandling:
+    @staticmethod
+    def on_terminal_msg(msg):
         tag = int(msg)
         prod = 2
         get_db_v = get_db()
@@ -17,7 +17,8 @@ class RaspberryMsgHandling():
             create_tag(db, TagCreate(id=tag, product_id=prod))
 
 
-    def on_checkout_msg(self, msg):
+    @staticmethod
+    def on_checkout_msg(msg):
         tag = int(msg)
         get_db_v = get_db()
         db = next(get_db_v)
