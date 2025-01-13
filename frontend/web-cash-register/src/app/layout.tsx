@@ -24,7 +24,7 @@ export default function RootLayout({
             <span className={"text-xl text-black px-10"}>Admin</span>
             <Link className={"hover:text-black"} href="/">Produkty</Link>
             <Link className={"hover:text-black"} href="/add-product">Dodaj produkt</Link>
-            <Link className={"hover:text-black"} href="/">Magazyn</Link>
+            <Link className={"hover:text-black"} href="/storage">Magazyn</Link>
           </div>
         </div>
       </nav>

@@ -69,7 +69,7 @@ export default function Home() {
                     <Link href={`/edit-product/${item.id}`}>Edytuj</Link>
                   </div>
                   <Button onClick={() => handleDelete(item.id)}>Usuń</Button>
-                  <Button onClick={() => handleDelete(item.id)}>Przypisz</Button>
+                  <Button onClick={() => handleAssign(item.id)}>Przypisz</Button>
                 </div>
 
               </div>
