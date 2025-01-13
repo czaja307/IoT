@@ -1,4 +1,3 @@
-import RPI.GPIO
 from mfrc522 import MFRC522
 
 class RFIDInterface:
@@ -16,13 +15,10 @@ class RFIDInterface:
             (status, uid) = self.reader.MFRC522_Anticoll()
             if status == self.reader.MI_OK:
                 uid_int = self.uid_to_int(uid)
-                print(f"RFID card detected: UID={uid}")
+                print(f"RFID card detected: UID={uid_int}")
                 return uid_int
             else:
                 print("RFID card read failed")
-        else:
-            print("No RFID card detected")
+        # else:
+        #    print("No RFID card detected")
         return None
-
-    def cleanup(self):
-        GPIO.cleanup()

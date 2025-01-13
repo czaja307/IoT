@@ -40,7 +40,7 @@ class CheckoutApp:
         time.sleep(1)
         self.communications.send_message("3")
 
-        self.interactions.start_rfid_listener(self.process_rfid_card)
+        self.interactions.start_rfid_listener()
 
 
 if __name__ == '__main__':

@@ -17,6 +17,7 @@ class CheckoutInteractions(InteractionsInterface):
         self.quitting = False
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
+        self.set_pixels_color((0,0,0))
         
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
@@ -27,7 +28,6 @@ class CheckoutInteractions(InteractionsInterface):
         self.quitting = True
         try:
             self.cleanup()
-            self.rfid_reader.cleanup()
             super().quit_sig_sent()
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")
@@ -85,6 +85,6 @@ class CheckoutInteractions(InteractionsInterface):
                     self.indicate_success()
                 else:
                     self.indicate_error()
-                time.sleep(1)
+                time.sleep(0.5)
         except KeyboardInterrupt:
             self.quit_sig_sent()

@@ -8,7 +8,7 @@ class CheckoutCommunications(CommunicationsInterface):
         super().__init__()
         self.client = mqtt.Client()
         self.broker = MQTT_BROKER
-        self.topic = ""
+        self.topic = "."
         
 
     def send_message(self, message):
