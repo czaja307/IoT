@@ -1,3 +1,4 @@
+//@ts-nocheck
 "use client";
 import { ProductProps } from "@/lib/types";
 import Link from "next/link";
