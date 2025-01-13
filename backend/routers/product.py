@@ -7,9 +7,10 @@ from controllers.product import (
     create_product,
     update_product,
     delete_product,
+    get_products_count,
 )
 from database import get_db
-from schemas.product import ProductCreate, ProductUpdate, Product
+from schemas.product import ProductCreate, ProductUpdate, Product, ProductCount
 
 router = APIRouter()
 
@@ -45,3 +46,8 @@ def delete_existing_product(product_id: int, db: Session = Depends(get_db)):
     success = delete_product(db, product_id=product_id)
     if not success:
         raise HTTPException(status_code=404, detail="Product not found")
+
+
+@router.get("/count/", response_model=list[ProductCount])
+def read_products_count(db: Session = Depends(get_db)):
+    return get_products_count(db)

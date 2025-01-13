@@ -28,3 +28,9 @@ class Product(ProductBase):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+
+
+class ProductCount(BaseModel):
+    id: int
+    name: str
+    count: int
