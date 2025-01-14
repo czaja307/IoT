@@ -1,2 +1,3 @@
 from .communications_interface import CommunicationsInterface
 from .interactions_interface import InteractionsInterface
+from .rfid_interface import RFIDInterface
