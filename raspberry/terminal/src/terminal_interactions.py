@@ -59,10 +59,8 @@ class TerminalInteractions(InteractionsInterface):
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
-        self.run_buzzer()
         time.sleep(0.5)
         self.pixels.fill((0, 0, 0))
-        self.stop_buzzer()
 
     def indicate_error(self):
         self.set_pixels_color((255, 0, 0))

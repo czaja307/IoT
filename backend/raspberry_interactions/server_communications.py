@@ -39,7 +39,8 @@ class ServerCommunications:
             response = self.checkout_message(message_decoded)
             self.send_message(f"{msg_topic}resp/", response)
         elif TERMINAL_TOPIC in msg_topic:
-            self.terminal_message(message_decoded, msg_topic)
+            response = self.terminal_message(message_decoded, msg_topic)
+            self.send_message(f"{msg_topic}resp/", response)
 
     def set_on_terminal_msg(self, func):
         self.on_terminal_msg = func
@@ -56,7 +57,8 @@ class ServerCommunications:
     def terminal_message(self, message, topic):
         print(f"terminal: {message}")
         if self.on_terminal_msg:
-            self.on_terminal_msg(message, topic)
+            return self.on_terminal_msg(message, topic)
+        return None
 
     def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: List[int]) -> None:
         topic = f"{topic_type}{registered_count}/"
