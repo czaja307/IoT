@@ -17,10 +17,14 @@ class TerminalCommunications(CommunicationsInterface):
         super().on_start()
         self.start_mosquitto()
 
-
     def on_cleanup(self):
         super().on_cleanup()
         self.stop_mosquitto()
+
+    def on_message(self, client, userdata, message):
+        message_decoded = (str(message.payload.decode("utf-8")))
+        print(message_decoded)
+        self.process_response(message_decoded)
 
     def greeting_from_server(self, client, userdata, message):
         message_decoded = (str(message.payload.decode("utf-8")))
@@ -29,7 +33,8 @@ class TerminalCommunications(CommunicationsInterface):
             if self.get_ip_address() == parts[1]:
                 self.client.unsubscribe(GREETING_TOPIC)
                 self.topic = f"{TERMINAL_TOPIC}{parts[2]}/"
-                self.client.on_message = None
+                self.client.on_message = self.on_message
+                self.client.subscribe(f"{self.topic}resp/")
                 print("Treminal is ready to send messages.")
 
     def start_mosquitto(self):

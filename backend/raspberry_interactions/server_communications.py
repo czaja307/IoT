@@ -32,7 +32,8 @@ class ServerCommunications:
             response = self.checkout_message(message_decoded)
             self.send_message(f"{msg_topic}resp/", response)
         elif TERMINAL_TOPIC in msg_topic:
-            self.terminal_message(message_decoded)
+            response = self.terminal_message(message_decoded, msg_topic)
+            self.send_message(f"{msg_topic}resp/", response)
 
     def set_on_terminal_msg(self, func):
         self.on_terminal_msg = func
@@ -49,7 +50,16 @@ class ServerCommunications:
     def terminal_message(self, message):
         print(f"terminal: {message}")
         if self.on_terminal_msg:
-            self.on_terminal_msg(message)
+            return self.on_terminal_msg(message, topic)
+        return None
+
+    def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: List[int]) -> None:
+        topic = f"{topic_type}{registered_count}/"
+
+        self.client.subscribe(topic)
+        self.subscribed_topics.append(topic)
+        self.send_message(GREETING_TOPIC, f"for#{ip}#{registered_count}")
+        registered_list.append(registered_count)
 
     def greeting_from_raspberry(self, message):
         parts = message.split("#")

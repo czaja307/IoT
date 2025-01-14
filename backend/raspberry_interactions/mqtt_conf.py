@@ -3,3 +3,6 @@ MQTT_BROKER = "127.0.0.1"  # TODO: enter a valid address
 TERMINAL_TOPIC = "/terminal/"
 CHECKOUT_TOPIC = "/checkout/"
 GREETING_TOPIC = "/greeting/"
+
+STATUS_OK = "OK"
+STATUS_NOK = "NOK"
