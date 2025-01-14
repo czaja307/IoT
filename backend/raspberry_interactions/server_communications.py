@@ -66,9 +66,6 @@ class ServerCommunications:
         self.send_message(GREETING_TOPIC, f"for#{ip}#{registered_count}")
         registered_list.append(registered_count)
 
-        if topic_type == TERMINAL_TOPIC:
-            self.terminals_products_dict[self.registered_terminals_count] = None
-
     def greeting_from_raspberry(self, message):
         print("message received")
         parts = message.split("#")
@@ -83,6 +80,7 @@ class ServerCommunications:
         elif parts[0] == TERMINAL_TOPIC:
             self.registered_terminals_count += 1
             self.register_device(TERMINAL_TOPIC, parts[1], self.registered_terminals_count, self.registered_terminals)
+            self.terminals_products_dict[self.registered_terminals_count] = None
         else:
             print("incorrect topic")
             return
