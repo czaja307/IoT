@@ -12,7 +12,6 @@ class TerminalInteractions(InteractionsInterface):
         super().__init__()
         self.quitting = False
         
-
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
         self.setupButtons()
