@@ -1,7 +1,6 @@
 from .src import CheckoutInteractions
 from .src import CheckoutCommunications
 from .src import CheckoutLogic
-import time
 import ast
 
 class CheckoutApp:
@@ -23,7 +22,6 @@ class CheckoutApp:
         print(f"Product assigned to tag (id={product["id"]}):\nname: {product["name"]}\ndesc: {product["description"]}\nprice: {product["price"]}")
         self.logic.add_product(product)
         
-
     def finish_checkout(self):
         tags = self.logic.get_tags()
         total = self.logic.get_total()
