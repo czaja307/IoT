@@ -3,11 +3,11 @@ from controllers.purchase import create_purchase
 from raspberry_interactions import ServerCommunications
 from schemas.tag import TagCreate, TagUpdate
 from database import get_db
-from models.product import Product as mProduct
 from schemas.product import Product as sProduct
 from schemas.purchase import PurchaseCreate, ProductQuantityCreate
 from .mqtt_conf import STATUS_NOK, STATUS_OK
 from collections import defaultdict
+
 
 class RaspberryMsgHandling:
 
@@ -60,7 +60,6 @@ class RaspberryMsgHandling:
         else:
             create_tag(db, TagCreate(id=tag, product_id=prod))
         return STATUS_OK
-
 
     @staticmethod
     def on_checkout_msg(msg):

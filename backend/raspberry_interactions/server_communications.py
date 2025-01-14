@@ -1,17 +1,24 @@
+from typing import List, Optional, Callable, Dict
 
 from .mqtt_conf import *
 import paho.mqtt.client as mqtt
+from decorators import singleton
 
+
+@singleton
 class ServerCommunications:
 
     def __init__(self):
         self.client = mqtt.Client()
         self.broker = MQTT_BROKER
         self.subscribed_topics = [GREETING_TOPIC]
-        self.registered_checkouts = 0 
-        self.registered_terminals = 0 
-        self.on_checkout_msg = None
-        self.on_terminal_msg = None
+        self.registered_checkouts: List[int] = []
+        self.registered_checkouts_count: int = 0
+        self.registered_terminals: List[int] = []
+        self.registered_terminals_count: int = 0
+        self.on_checkout_msg: Optional[Callable] = None
+        self.on_terminal_msg: Optional[Callable] = None
+        self.terminals_products_dict: Dict[int, Optional[int]] = {}
 
     def on_start(self):
         self.start_mosquitto()
@@ -64,7 +71,7 @@ class ServerCommunications:
             return self.on_checkout_msg(message)
         return None
 
-    def terminal_message(self, message):
+    def terminal_message(self, message, topic):
         print(f"terminal: {message}")
         if self.on_terminal_msg:
             return self.on_terminal_msg(message)
@@ -79,21 +86,25 @@ class ServerCommunications:
         registered_list.append(registered_count)
 
     def greeting_from_raspberry(self, message):
+        print("message received")
         parts = message.split("#")
-        if len(parts) == 2:
-            print("message received")
-            if parts[0] == CHECKOUT_TOPIC:
-                self.registered_checkouts += 1
-                self.client.subscribe(f"{CHECKOUT_TOPIC}{self.registered_checkouts}/")
-                self.subscribed_topics.append(f"{CHECKOUT_TOPIC}{self.registered_checkouts}/")
-                self.send_message(GREETING_TOPIC, f"for#{parts[1]}#{self.registered_checkouts}")
-            elif parts[0] == TERMINAL_TOPIC:
-                self.registered_terminals += 1
-                self.client.subscribe(f"{TERMINAL_TOPIC}{self.registered_terminals}/")
-                self.subscribed_topics.append(f"{TERMINAL_TOPIC}{self.registered_terminals}/")
-                self.send_message(GREETING_TOPIC, f"for#{parts[1]}#{self.registered_terminals}")
-            print(f"registered t: {self.registered_terminals}, c: {self.registered_checkouts}")
-            
+
+        if len(parts) != 2:
+            print("wrong message format")
+            return
+
+        if parts[0] == CHECKOUT_TOPIC:
+            self.registered_checkouts_count += 1
+            self.register_device(CHECKOUT_TOPIC, parts[1], self.registered_checkouts_count, self.registered_checkouts)
+        elif parts[0] == TERMINAL_TOPIC:
+            self.registered_terminals_count += 1
+            self.register_device(TERMINAL_TOPIC, parts[1], self.registered_terminals_count, self.registered_terminals)
+            self.terminals_products_dict[self.registered_terminals_count] = None
+        else:
+            print("incorrect topic")
+            return
+
+        print(f"registered successfully t: {self.registered_terminals}, c: {self.registered_checkouts}")
 
     def start_mosquitto(self):
         self.client.connect(self.broker)
@@ -108,6 +119,3 @@ class ServerCommunications:
         self.client.loop_stop()
         self.client.disconnect()
         print("End of the show")
-
-
-    
