@@ -7,10 +7,13 @@ from schemas.product import Product as sProduct
 
 class RaspberryMsgHandling:
     @staticmethod
-    def on_terminal_msg(msg):
+    def on_terminal_msg(msg, topic):
         tag = int(msg)
-        prod = 2
-        terminal = 1
+        terminal_id = int(topic.split("/")[2])
+        prod = int(ServerCommunications().terminals_products_dict[terminal_id])
+        if not prod:
+            return
+
         get_db_v = get_db()
         db = next(get_db_v)
         tag_from_db = get_tag(db, tag)
@@ -18,7 +21,6 @@ class RaspberryMsgHandling:
             update_tag(db, tag, TagUpdate(id=tag, product_id=prod))
         else:
             create_tag(db, TagCreate(id=tag, product_id=prod))
-        ServerCommunications().terminals_products_dict[terminal] = prod
 
     @staticmethod
     def on_checkout_msg(msg):
