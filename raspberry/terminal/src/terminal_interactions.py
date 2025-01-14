@@ -57,6 +57,11 @@ class TerminalInteractions(InteractionsInterface):
         self.pixels.fill(color)
         self.pixels.show()
 
+    def indicate_read(self):
+        self.run_buzzer()
+        time.sleep(0.4)
+        self.stop_buzzer()
+
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
         time.sleep(0.5)
@@ -77,10 +82,8 @@ class TerminalInteractions(InteractionsInterface):
             while not self.quitting:
                 uid = self.rfid.read_rfid()
                 if uid:
-                    self.indicate_success()
                     self.card_read(uid)
-                else:
-                    self.indicate_error()
+                    self.indicate_read()
                 time.sleep(0.3)
         except KeyboardInterrupt:
             self.quit_sig_sent()
