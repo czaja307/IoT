@@ -19,6 +19,4 @@ class RFIDInterface:
                 return uid_int
             else:
                 print("RFID card read failed")
-        # else:
-        #    print("No RFID card detected")
         return None

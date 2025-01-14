@@ -83,6 +83,7 @@ class CheckoutInteractions(InteractionsInterface):
                 uid = self.rfid.read_rfid()
                 if uid:
                     self.indicate_success()
+                    self.card_read(uid)
                 else:
                     self.indicate_error()
                 time.sleep(0.3)

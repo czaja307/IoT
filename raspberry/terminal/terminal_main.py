@@ -17,17 +17,18 @@ class TerminalApp:
     def process_rfid_card(self, uid):
         self.last_scanned_item = uid
         print(f"Scanned item: {uid}")
-        self.communications.send_message(f"terminal#{uid}")
+        self.communications.send_message(f"{uid}")
 
     def main(self):
         print('Hello, World!')
         self.interactions = TerminalInteractions()
         self.interactions.assign_quit_action(self.quit_actions)
-        
+        self.interactions.assign_card_read_action(self.process_rfid_card)
+
         self.communications = TerminalCommunications()
         self.communications.on_start()
         
-        self.interactions.start_rfid_listener(self.process_rfid_card)
+        self.interactions.start_rfid_listener()
 
 if __name__ == '__main__':
     app = TerminalApp()
