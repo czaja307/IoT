@@ -24,6 +24,9 @@ class CheckoutApp:
         
     def finish_checkout(self):
         tags = self.logic.get_tags()
+        if len(tags) == 0:
+            print("Cannot checkout an empty cart. Scan an item first.")
+            return
         total = self.logic.get_total()
         print(f"The total price for your shopping is: {total}.")
         tags_string = "#".join(tags)
