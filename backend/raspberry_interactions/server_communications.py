@@ -37,10 +37,12 @@ class ServerCommunications:
             self.greeting_from_raspberry(message_decoded)
         elif CHECKOUT_TOPIC in msg_topic:
             response = self.checkout_message(message_decoded)
-            self.send_message(f"{msg_topic}resp/", response)
+            if response:
+                self.send_message(f"{msg_topic}resp/", response)
         elif TERMINAL_TOPIC in msg_topic:
             response = self.terminal_message(message_decoded, msg_topic)
-            self.send_message(f"{msg_topic}resp/", response)
+            if response:
+                self.send_message(f"{msg_topic}resp/", response)
 
     def set_on_terminal_msg(self, func):
         self.on_terminal_msg = func
