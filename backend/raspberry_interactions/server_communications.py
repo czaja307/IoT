@@ -22,6 +22,18 @@ class ServerCommunications:
     def send_message(self, topic, message):
         self.client.publish(topic, message)
 
+    def remove_device(self, topic):
+        segmented_topic = topic.split("/")
+        id = int(segmented_topic[:-1])
+        if segmented_topic[0] in CHECKOUT_TOPIC:
+            self.registered_checkouts.remove(id)
+            self.registered_checkouts_count -= 1
+        elif segmented_topic[0] in TERMINAL_TOPIC:
+            self.registered_terminals.remove(id)
+            self.registered_terminals_count -= 1
+            if id in self.terminals_products_dict:
+                del self.terminals_products_dict[id]
+
     def on_message(self, client, userdata, message):
         msg_topic = message.topic
         print(f"message on topic: {msg_topic}")
@@ -36,6 +48,9 @@ class ServerCommunications:
             response = self.terminal_message(message_decoded, msg_topic)
             if response:
                 self.send_message(f"{msg_topic}resp/", response)
+        elif FAREWELL_TOPIC in msg_topic:
+            self.remove_device(msg_topic)
+
 
     def set_on_terminal_msg(self, func):
         self.on_terminal_msg = func

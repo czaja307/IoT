@@ -40,8 +40,9 @@ class CheckoutCommunications(CommunicationsInterface):
 
 
     def start_mosquitto(self):
-        self.client.connect(self.broker)
         self.client.on_message = self.greeting_from_server
+        self.client.will_set(FAREWELL_TOPIC, self.topic)
+        self.client.connect(self.broker)
         self.client.loop_start()
         self.client.subscribe(GREETING_TOPIC)
         self.client.publish(GREETING_TOPIC, f"{CHECKOUT_TOPIC}#{self.get_ip_address()}")
