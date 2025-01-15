@@ -74,7 +74,7 @@ class ServerCommunications:
     def terminal_message(self, message, topic):
         print(f"terminal: {message}")
         if self.on_terminal_msg:
-            return self.on_terminal_msg(message)
+            return self.on_terminal_msg(message, topic)
         return None
 
     def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: [int]) -> None:
@@ -82,13 +82,11 @@ class ServerCommunications:
 
         self.client.subscribe(topic)
         self.subscribed_topics.append(topic)
-        self.send_message(GREETING_TOPIC, f"for#{ip}#{registered_count}")
+        self.send_message(f"{GREETING_TOPIC}resp/", f"for#{ip}#{registered_count}")
         registered_list.append(registered_count)
 
     def greeting_from_raspberry(self, message):
-        print("message received")
         parts = message.split("#")
-
         if len(parts) != 2:
             print("wrong message format")
             return

@@ -37,7 +37,6 @@ def delete_tag(db: Session, tag_id: int):
     if db_tag:
         db.delete(db_tag)
         db.commit()
-        db.refresh(db_tag)
         return True
 
 

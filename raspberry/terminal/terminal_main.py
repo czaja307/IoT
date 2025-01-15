@@ -31,15 +31,6 @@ class TerminalApp:
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
 
-        #testing starts here
-        input("Press enter to scan item 3")
-        self.communications.send_message("3")
-        input("Press enter to scan item 1")
-        self.communications.send_message("1")
-        input("Press enter to scan item 2")
-        self.communications.send_message("2")
-
-
 if __name__ == '__main__':
     app = TerminalApp()
     app.main()

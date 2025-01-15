@@ -11,8 +11,11 @@ class CheckoutLogic:
     def add_scanned_tag(self, tag) -> bool:
         if tag in self._scanned_tags:
             return False
-        self._scanned_tags.append(tag)
+        self._scanned_tags.append(str(tag))
         return True
+    
+    def remove_last_scanned(self):
+        self._scanned_tags = self._scanned_tags[:-1]
 
     def reset_session(self):
         self._price = 0
