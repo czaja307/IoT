@@ -67,10 +67,10 @@ class ServerCommunications:
     def terminal_message(self, message):
         print(f"terminal: {message}")
         if self.on_terminal_msg:
-            return self.on_terminal_msg(message, topic)
+            return self.on_terminal_msg(message)
         return None
 
-    def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: List[int]) -> None:
+    def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: [int]) -> None:
         topic = f"{topic_type}{registered_count}/"
 
         self.client.subscribe(topic)

@@ -6,7 +6,7 @@ from database import get_db
 from models.product import Product as mProduct
 from schemas.product import Product as sProduct
 from schemas.purchase import PurchaseCreate, ProductQuantityCreate
-from mqtt_conf import STATUS_NOK, STATUS_OK
+from .mqtt_conf import STATUS_NOK, STATUS_OK
 from collections import defaultdict
 
 class RaspberryMsgHandling:

@@ -23,8 +23,8 @@ class CommunicationsInterface(ABC):
     
     def get_ip_address(self):
         interfaces = netifaces.interfaces()
-        if 'eth0' in interfaces:
-            eth0_info = netifaces.ifaddresses('eth0')
+        if 'en0' in interfaces:
+            eth0_info = netifaces.ifaddresses('en0')
             return eth0_info[netifaces.AF_INET][0]['addr']
         return None
     
