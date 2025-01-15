@@ -2,6 +2,7 @@ from .src import CheckoutInteractions
 from .src import CheckoutCommunications
 from .src import CheckoutLogic
 import ast
+from common.mqqt_conf import STATUS_NOK
 
 class CheckoutApp:
 
@@ -18,9 +19,17 @@ class CheckoutApp:
         quit()
 
     def server_response_received(self, response):
-        product = ast.literal_eval(response)
-        print(f"Product assigned to tag (id={product["id"]}):\nname: {product["name"]}\ndesc: {product["description"]}\nprice: {product["price"]}")
-        self.logic.add_product(product)
+        if self.logic.get_tags() != []:
+            if response == STATUS_NOK:
+                self.logic.remove_last_scanned()
+                print("Could not scan the tag")
+                return
+            product = ast.literal_eval(response)
+            print(f"Product assigned to tag (id={product['id']}):\nname: {product['name']}\ndesc: {product['description']}\nprice: {product['price']}")
+            self.logic.add_product(product)
+        else:
+            if response == STATUS_NOK:
+                print("Checkout failed")
         
     def finish_checkout(self):
         tags = self.logic.get_tags()
@@ -55,7 +64,6 @@ class CheckoutApp:
         self.interactions.assign_confirm_action(self.finish_checkout)
         self.interactions.assign_cancel_action(self.cancel_checkout)
         self.interactions.assign_quit_action(self.quit_actions)
-        self.interactions.assign_card_read_action(self.process_rfid_card)
 
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()

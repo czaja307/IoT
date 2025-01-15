@@ -1,6 +1,5 @@
 from .src import TerminalInteractions
 from .src import TerminalCommunications
-import time
 from common.mqqt_conf import STATUS_NOK, STATUS_OK
 class TerminalApp:
 
@@ -31,7 +30,6 @@ class TerminalApp:
             print("Invalid response from server!")
 
     def main(self):
-        print('Hello, World!')
         self.interactions = TerminalInteractions()
         self.interactions.assign_quit_action(self.quit_actions)
         self.interactions.assign_card_read_action(self.process_rfid_card)

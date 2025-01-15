@@ -79,16 +79,13 @@ class ServerCommunications:
 
     def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: List[int]) -> None:
         topic = f"{topic_type}{registered_count}/"
-
         self.client.subscribe(topic)
         self.subscribed_topics.append(topic)
-        self.send_message(GREETING_TOPIC, f"for#{ip}#{registered_count}")
+        self.send_message(f"{GREETING_TOPIC}resp/", f"for#{ip}#{registered_count}")
         registered_list.append(registered_count)
 
     def greeting_from_raspberry(self, message):
-        print("message received")
         parts = message.split("#")
-
         if len(parts) != 2:
             print("wrong message format")
             return

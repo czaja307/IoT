@@ -26,21 +26,28 @@ class RaspberryMsgHandling:
         tag = int(msg)
         db = next(get_db_v)
         tag_from_db = get_tag(db, tag)
-        s_prod = sProduct.model_validate(tag_from_db.product)
-        print(s_prod.model_dump())
-        return str(s_prod.model_dump())
+        if tag_from_db:
+            s_prod = sProduct.model_validate(tag_from_db.product)
+            print(s_prod.model_dump())
+            return str(s_prod.model_dump())
+        return STATUS_NOK
 
     def _process_purchase(parts, get_db_v):
         db = next(get_db_v)
         prod_quants = defaultdict(lambda: {"product": None, "quantity": 0})
         for tag in parts[1:]:
             tag_from_db = get_tag(db, tag)
-            s_prod = sProduct.model_validate(tag_from_db.product)
-            prod_id = tag_from_db.product_id
-            if prod_id not in prod_quants:
-                prod_quants[prod_id]["product"] = s_prod
-            prod_quants[prod_id]["quantity"] += 1
-            delete_tag(db, get_db_v)
+            if tag_from_db:
+                s_prod = sProduct.model_validate(tag_from_db.product)
+                prod_id = tag_from_db.product_id
+                if prod_id not in prod_quants:
+                    prod_quants[prod_id]["product"] = s_prod
+                prod_quants[prod_id]["quantity"] += 1
+                print(prod_quants)
+                try:
+                    delete_tag(db, tag)
+                except:
+                    return STATUS_NOK
         purchase = RaspberryMsgHandling._create_purchase(prod_quants)
         create_purchase(db, purchase)
         return None
@@ -49,8 +56,9 @@ class RaspberryMsgHandling:
     def on_terminal_msg(msg, topic):
         tag = int(msg)
         terminal_id = int(topic.split("/")[2])
-        prod = int(ServerCommunications().terminals_products_dict[terminal_id])
-        if not prod:
+        try:
+            prod = int(ServerCommunications().terminals_products_dict[terminal_id])
+        except:
             return STATUS_NOK
         get_db_v = get_db()
         db = next(get_db_v)

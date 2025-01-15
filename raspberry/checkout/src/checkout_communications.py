@@ -12,6 +12,7 @@ class CheckoutCommunications(CommunicationsInterface):
         
 
     def send_message(self, message):
+        print(f"sending {message}")
         self.client.publish(self.topic, message)
 
     def on_start(self):
@@ -32,7 +33,7 @@ class CheckoutCommunications(CommunicationsInterface):
         parts = message_decoded.split("#")
         if len(parts) == 3 and parts[0] == "for":
             if self.get_ip_address() == parts[1]:
-                self.client.unsubscribe(GREETING_TOPIC)
+                self.client.unsubscribe(f"{GREETING_TOPIC}resp/")
                 self.topic = f"{CHECKOUT_TOPIC}{parts[2]}/"
                 self.client.on_message = self.on_message
                 self.client.subscribe(f"{self.topic}resp/")
@@ -44,7 +45,7 @@ class CheckoutCommunications(CommunicationsInterface):
         self.client.will_set(FAREWELL_TOPIC, self.topic)
         self.client.connect(self.broker)
         self.client.loop_start()
-        self.client.subscribe(GREETING_TOPIC)
+        self.client.subscribe(f"{GREETING_TOPIC}resp/")
         self.client.publish(GREETING_TOPIC, f"{CHECKOUT_TOPIC}#{self.get_ip_address()}")
         print("mosquitto ")
 
