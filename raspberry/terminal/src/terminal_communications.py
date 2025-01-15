@@ -38,8 +38,9 @@ class TerminalCommunications(CommunicationsInterface):
                 print("Treminal is ready to send messages.")
 
     def start_mosquitto(self):
-        self.client.connect(self.broker)
         self.client.on_message = self.greeting_from_server
+        self.client.will_set(FAREWELL_TOPIC, self.topic)
+        self.client.connect(self.broker)
         self.client.loop_start()
         self.client.subscribe(GREETING_TOPIC)
         self.client.publish(GREETING_TOPIC, f"{TERMINAL_TOPIC}#{self.get_ip_address()}")
