@@ -5,5 +5,7 @@ CHECKOUT_TOPIC = "/checkout/"
 GREETING_TOPIC = "/greeting/"
 FAREWELL_TOPIC = "/farewell/"
 
+RESPONSE_SUFFIX = "resp/"
+
 STATUS_OK = "OK"
 STATUS_NOK = "NOK"

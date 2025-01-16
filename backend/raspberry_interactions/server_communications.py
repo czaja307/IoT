@@ -1,5 +1,4 @@
 from typing import List, Optional, Callable, Dict
-
 from .mqtt_conf import *
 import paho.mqtt.client as mqtt
 from decorators import singleton
@@ -50,11 +49,11 @@ class ServerCommunications:
         elif CHECKOUT_TOPIC in msg_topic:
             response = self.checkout_message(message_decoded)
             if response:
-                self.send_message(f"{msg_topic}resp/", response)
+                self.send_message(f"{msg_topic}{RESPONSE_SUFFIX}", response)
         elif TERMINAL_TOPIC in msg_topic:
             response = self.terminal_message(message_decoded, msg_topic)
             if response:
-                self.send_message(f"{msg_topic}resp/", response)
+                self.send_message(f"{msg_topic}{RESPONSE_SUFFIX}", response)
         elif FAREWELL_TOPIC in msg_topic:
             self.remove_device(msg_topic)
 
@@ -81,7 +80,7 @@ class ServerCommunications:
         topic = f"{topic_type}{registered_count}/"
         self.client.subscribe(topic)
         self.subscribed_topics.append(topic)
-        self.send_message(f"{GREETING_TOPIC}resp/", f"for#{ip}#{registered_count}")
+        self.send_message(f"{GREETING_TOPIC}{RESPONSE_SUFFIX}", f"for#{ip}#{registered_count}")
         registered_list.append(registered_count)
 
     def greeting_from_raspberry(self, message):
