@@ -18,7 +18,6 @@ class TerminalInteractions(InteractionsInterface):
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
         
-
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
         self.setupButtons()
@@ -58,12 +57,15 @@ class TerminalInteractions(InteractionsInterface):
         self.pixels.fill(color)
         self.pixels.show()
 
+    def indicate_read(self):
+        self.run_buzzer()
+        time.sleep(0.4)
+        self.stop_buzzer()
+
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
-        self.run_buzzer()
         time.sleep(0.5)
         self.pixels.fill((0, 0, 0))
-        self.stop_buzzer()
 
     def indicate_error(self):
         self.set_pixels_color((255, 0, 0))
@@ -80,9 +82,8 @@ class TerminalInteractions(InteractionsInterface):
             while not self.quitting:
                 uid = self.rfid.read_rfid()
                 if uid:
-                    self.indicate_success()
-                else:
-                    self.indicate_error()
+                    self.card_read(uid)
+                    self.indicate_read()
                 time.sleep(0.3)
         except KeyboardInterrupt:
             self.quit_sig_sent()

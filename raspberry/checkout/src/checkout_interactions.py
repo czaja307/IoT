@@ -82,9 +82,7 @@ class CheckoutInteractions(InteractionsInterface):
             while not self.quitting:
                 uid = self.rfid.read_rfid()
                 if uid:
-                    self.indicate_success()
-                else:
-                    self.indicate_error()
+                    self.card_read(uid)
                 time.sleep(0.3)
         except KeyboardInterrupt:
             self.quit_sig_sent()

@@ -1,2 +1,3 @@
 from .checkout_communications import CheckoutCommunications
 from .checkout_interactions import CheckoutInteractions
+from .checkout_logic import CheckoutLogic

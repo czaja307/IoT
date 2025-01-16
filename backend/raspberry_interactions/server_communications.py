@@ -1,5 +1,4 @@
 from typing import List, Optional, Callable, Dict
-
 from .mqtt_conf import *
 import paho.mqtt.client as mqtt
 from decorators import singleton
@@ -29,6 +28,18 @@ class ServerCommunications:
     def send_message(self, topic, message):
         self.client.publish(topic, message)
 
+    def remove_device(self, topic):
+        segmented_topic = topic.split("/")
+        id = int(segmented_topic[:-1])
+        if segmented_topic[0] in CHECKOUT_TOPIC:
+            self.registered_checkouts.remove(id)
+            self.registered_checkouts_count -= 1
+        elif segmented_topic[0] in TERMINAL_TOPIC:
+            self.registered_terminals.remove(id)
+            self.registered_terminals_count -= 1
+            if id in self.terminals_products_dict:
+                del self.terminals_products_dict[id]
+
     def on_message(self, client, userdata, message):
         msg_topic = message.topic
         print(f"message on topic: {msg_topic}")
@@ -37,9 +48,15 @@ class ServerCommunications:
             self.greeting_from_raspberry(message_decoded)
         elif CHECKOUT_TOPIC in msg_topic:
             response = self.checkout_message(message_decoded)
-            self.send_message(f"{msg_topic}resp/", response)
+            if response:
+                self.send_message(f"{msg_topic}{RESPONSE_SUFFIX}", response)
         elif TERMINAL_TOPIC in msg_topic:
-            self.terminal_message(message_decoded, msg_topic)
+            response = self.terminal_message(message_decoded, msg_topic)
+            if response:
+                self.send_message(f"{msg_topic}{RESPONSE_SUFFIX}", response)
+        elif FAREWELL_TOPIC in msg_topic:
+            self.remove_device(msg_topic)
+
 
     def set_on_terminal_msg(self, func):
         self.on_terminal_msg = func
@@ -56,20 +73,18 @@ class ServerCommunications:
     def terminal_message(self, message, topic):
         print(f"terminal: {message}")
         if self.on_terminal_msg:
-            self.on_terminal_msg(message, topic)
+            return self.on_terminal_msg(message, topic)
+        return None
 
     def register_device(self, topic_type: str, ip: str, registered_count: int, registered_list: List[int]) -> None:
         topic = f"{topic_type}{registered_count}/"
-
         self.client.subscribe(topic)
         self.subscribed_topics.append(topic)
-        self.send_message(GREETING_TOPIC, f"for#{ip}#{registered_count}")
+        self.send_message(f"{GREETING_TOPIC}{RESPONSE_SUFFIX}", f"for#{ip}#{registered_count}")
         registered_list.append(registered_count)
 
     def greeting_from_raspberry(self, message):
-        print("message received")
         parts = message.split("#")
-
         if len(parts) != 2:
             print("wrong message format")
             return
