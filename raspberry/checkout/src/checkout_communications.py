@@ -12,7 +12,6 @@ class CheckoutCommunications(CommunicationsInterface):
         
 
     def send_message(self, message):
-        print(f"sending {message}")
         self.client.publish(self.topic, message)
 
     def on_start(self):
