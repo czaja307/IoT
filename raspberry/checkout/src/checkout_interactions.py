@@ -1,6 +1,8 @@
 from common.config import *
 from common import InteractionsInterface
 from common import RFIDInterface
+from common.SSD1331 import SSD1331
+from common.display_manager import DisplayManager
 
 try:
     import RPi.GPIO as GPIO
@@ -18,6 +20,9 @@ class CheckoutInteractions(InteractionsInterface):
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
         self.set_pixels_color((0,0,0))
+
+        display = SSD1331.SSD1331()
+        self.display_manager = DisplayManager(display)
         
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
