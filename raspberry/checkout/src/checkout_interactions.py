@@ -37,6 +37,15 @@ class CheckoutInteractions(InteractionsInterface):
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")
 
+    def display_product_details(self, name, price):
+        self.display_manager.display_product_details(name, price)
+
+    def display_total_price(self, totalPrice):
+        self.display_manager.display_total_price(totalPrice)
+
+    def display_cancel_message(self):
+        self.display_cancel_message("Your shopping was cancelled.")
+
     def redButtonPressed(self, channel):
         start_time = time.time()
         while not self.quitting and GPIO.input(channel) == GPIO.LOW:
