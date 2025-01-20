@@ -1,6 +1,6 @@
 "use client";
 import { useParams } from "next/navigation";
-import { ProductForm } from "@/components/ProductForm";
+import { ProductForm } from "@/components/product-form";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 

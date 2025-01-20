@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { editData, fetchData } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { ProductAssign } from "@/components/product-assign";
 
 
 export default function Home() {
@@ -69,7 +70,7 @@ export default function Home() {
                     <Link href={`/edit-product/${item.id}`}>Edytuj</Link>
                   </div>
                   <Button onClick={() => handleDelete(item.id)}>Usuń</Button>
-                  <Button onClick={() => handleAssign(item.id)}>Przypisz</Button>
+                  <ProductAssign productId={item.id}/>
                 </div>
 
               </div>

@@ -31,7 +31,7 @@ export default function Home() {
         products.map((item: {id: number, name: string, quantity: number}) => (
           <Card key={item.id} className="w-[600px]">
             <CardHeader>
-              <CardTitle>{item.name} - {item.quantity} </CardTitle>
+              <CardTitle>{item.name} - 4 </CardTitle>
             </CardHeader>
           </Card>
         ))
