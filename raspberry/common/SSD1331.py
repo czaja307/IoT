@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-from config import *
+from oled_config import *
 import RPi.GPIO as GPIO
 import time
 import numpy as np
@@ -58,23 +58,23 @@ class SSD1331(object):
         self.width = OLED_WIDTH
         self.height = OLED_HEIGHT
         #Initialize DC RST pin
-        self._dc = config.DC_PIN
-        self._rst = config.RST_PIN
-        self._bl = config.BL_PIN
+        self._dc = oled_config.DC_PIN
+        self._rst = oled_config.RST_PIN
+        self._bl = oled_config.BL_PIN
 
 
 
     """    Write register address and data     """
     def command(self, cmd):
         GPIO.output(self._dc, GPIO.LOW)  # pylint: disable=no-member
-        config.spi_writebyte([cmd])
+        oled_config.spi_writebyte([cmd])
 
     # def data(self, val):
         # GPIO.output(self._dc, GPIO.HIGH)
         # config.spi_writebyte([val])
 
     def Init(self):
-        if (config.module_init() != 0):
+        if (oled_config.module_init() != 0):
             return -1
         """Initialize dispaly"""    
         self.reset()
@@ -150,7 +150,7 @@ class SSD1331(object):
         self.SetWindows ( 0, 0, self.width, self.height)
         GPIO.output(self._dc, GPIO.HIGH)  # pylint: disable=no-member
         for i in range(0,len(pix),1):
-            config.spi_writebyte(pix[i:i+1])		
+            oled_config.spi_writebyte(pix[i:i+1])		
 
     def clear(self):
         """Clear contents of image buffer"""
@@ -158,5 +158,5 @@ class SSD1331(object):
         self.SetWindows ( 0, 0, self.width, self.height)
         GPIO.output(self._dc, GPIO.HIGH)  # pylint: disable=no-member
         for i in range(0,len(_buffer),1):
-            config.spi_writebyte(_buffer[i:i+1])		
+            oled_config.spi_writebyte(_buffer[i:i+1])		
             #print "%d",_buffer[i:i+4096]
