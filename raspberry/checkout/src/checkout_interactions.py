@@ -19,7 +19,6 @@ class CheckoutInteractions(InteractionsInterface):
         self.quitting = False
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
-        self.set_pixels_color((0,0,0))
 
         display = SSD1331.SSD1331()
         self.display_manager = DisplayManager(display)
@@ -70,21 +69,24 @@ class CheckoutInteractions(InteractionsInterface):
     def stop_buzzer(self):
         self.buzzer(False)
 
+    def buzz(self):
+        self.run_buzzer()
+        time.sleep(0.5)
+        self.stop_buzzer()
+
     def set_pixels_color(self, color):
         self.pixels.fill(color)
         self.pixels.show()
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
-        self.run_buzzer()
         time.sleep(0.5)
-        self.pixels.fill((0, 0, 0))
-        self.stop_buzzer()
+        self.set_pixels_color((0, 0, 0))
 
     def indicate_error(self):
         self.set_pixels_color((255, 0, 0))
         time.sleep(0.5)
-        self.pixels.fill((0, 0, 0))
+        self.set_pixels_color((0, 0, 0))
 
     def cleanup(self):
         self.set_pixels_color((0, 0, 0)) 
