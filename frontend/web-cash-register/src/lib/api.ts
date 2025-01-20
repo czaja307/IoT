@@ -52,5 +52,4 @@ export async function editData(
     if (response.statusText === '204') return response.json()
     return null;
 
-
 }

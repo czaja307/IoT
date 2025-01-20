@@ -11,28 +11,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchData } from "@/lib/api";
-import { ProductProps } from "@/lib/types";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { editData, fetchData } from "@/lib/api";
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -71,20 +55,51 @@ export function SelectTerminal({terminals, terminal, setTerminal}: {terminals: T
 export function ProductAssign({productId} : { productId: number }) {
   const [terminal, setTerminal] = useState<string>("");
 
-  const { data: products, isLoading: isLoadingProducts, isError: isErrorProducts } = useQuery({
-    queryKey: ["products"],
+  const terminalsMutation = useMutation({
+    mutationFn: (data: {terminal_id: number, product_id: number}) => {
+      return editData("/terminals/products", "PUT", { body: JSON.stringify(data) });
+    },
+    onSuccess: () => {
+      alert(`Dodano powiązanie`);
+    },
+    onError: async (error: any) => {
+      if (error) {
+        alert(`Nie udało się powiązać`);
+      }
+    }
+  });
+
+
+  const { data: terminals, isLoading: isLoading, isError: isError } = useQuery({
+    queryKey: ["terminals"],
     queryFn: fetchProducts
   });
 
-  if (isLoadingProducts || !products) {
+  if (isLoading ||!terminals) {
     return (
       <div>loading...</div>
 
     );
   }
-  if (isErrorProducts) {
+  if (isError) {
     return <div>error</div>;
   }
+
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    if (!terminal.trim()) {
+      alert("All fields are required");
+      return;
+    }
+
+    const payload = {
+      terminal_id: Number(terminal),
+      product_id: productId,
+    };
+
+    terminalsMutation.mutate(payload);
+  };
 
   return (
     <AlertDialog>
@@ -95,16 +110,16 @@ export function ProductAssign({productId} : { productId: number }) {
         <AlertDialogHeader>
           <AlertDialogTitle>Proszę wybrać terminal</AlertDialogTitle>
           <AlertDialogDescription>
-            <SelectTerminal terminals={products} terminal={terminal} setTerminal={setTerminal}/>
+            <SelectTerminal terminals={terminals} terminal={terminal} setTerminal={setTerminal}/>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Anuluj</AlertDialogCancel>
-          <AlertDialogAction>Zatwierdż</AlertDialogAction>
+          <AlertDialogAction onClick={handleSubmit} type={"submit"}>Zatwierdż</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
 }
 
-const fetchProducts = async () => fetchData<ProductProps[]>("products");
+const fetchProducts = async () => fetchData<TerminalProps[]>("terminals/");
