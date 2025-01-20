@@ -20,7 +20,7 @@ class CheckoutInteractions(InteractionsInterface):
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
 
-        display = SSD1331.SSD1331()
+        display = SSD1331()
         self.display_manager = DisplayManager(display)
         
     def assign_quit_action(self, action):

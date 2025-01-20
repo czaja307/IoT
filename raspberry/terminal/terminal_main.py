@@ -18,6 +18,7 @@ class TerminalApp:
         self.last_scanned_item = uid
         print(f"Scanned item: {uid}")
         self.communications.send_message(f"{uid}")
+        self.interactions.buzz()
 
     def server_response_received(self, response):
         if response == STATUS_OK:

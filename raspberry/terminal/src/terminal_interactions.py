@@ -27,7 +27,7 @@ class TerminalInteractions(InteractionsInterface):
         self.quitting = True
         try:
             self.cleanup()
-            self.rfid_reader.cleanup()
+            # self.rfid_reader.cleanup()        no such field nor function
             super().quit_sig_sent()
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")
@@ -52,6 +52,11 @@ class TerminalInteractions(InteractionsInterface):
 
     def stop_buzzer(self):
         self.buzzer(False)
+
+    def buzz(self):
+        self.run_buzzer()
+        time.sleep(0.5)
+        self.stop_buzzer()
 
     def set_pixels_color(self, color):
         self.pixels.fill(color)

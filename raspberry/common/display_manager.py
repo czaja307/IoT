@@ -1,5 +1,5 @@
-from config import *
-from SSD1331 import SSD1331
+from . import config
+from . import SSD1331
 from PIL import Image, ImageDraw, ImageFont
 
 class DisplayManager:

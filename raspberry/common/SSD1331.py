@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-from oled_config import *
+from . import oled_config
 import RPi.GPIO as GPIO
 import time
 import numpy as np
