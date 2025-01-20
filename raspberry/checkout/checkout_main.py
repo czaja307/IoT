@@ -23,13 +23,17 @@ class CheckoutApp:
             if response == STATUS_NOK:
                 self.logic.remove_last_scanned()
                 print("Could not scan the tag")
+                self.interactions.indicate_error()
                 return
             product = ast.literal_eval(response)
             print(f"Product assigned to tag (id={product['id']}):\nname: {product['name']}\ndesc: {product['description']}\nprice: {product['price']}")
+            self.interactions.display_product_details(product['name'], product['price'])
             self.logic.add_product(product)
+            self.interactions.indicate_success()
         else:
             if response == STATUS_NOK:
                 print("Checkout failed")
+                self.interactions.indicate_error()
         
     def finish_checkout(self):
         tags = self.logic.get_tags()
@@ -38,12 +42,14 @@ class CheckoutApp:
             return
         total = self.logic.get_total()
         print(f"The total price for your shopping is: {total}.")
+        self.interactions.display_total_price(total)
         tags_string = "#".join(tags)
         self.communications.send_message(f"BUY#{tags_string}")
         self.logic.reset_session()
 
     def cancel_checkout(self):
         print("Your shopping was cancelled.")
+        self.interactions.display_cancel_message()
         self.logic.reset_session()
 
     def process_rfid_card(self, uid):
@@ -51,9 +57,10 @@ class CheckoutApp:
         if self.logic.add_scanned_tag(uid):
             print(f"Scanned item: {uid}")
             self.communications.send_message(f"{uid}")
-            self.interactions.indicate_success()
+            self.interactions.buzz()
         else:
             print("Item already scanned")
+            self.interactions.buzz()
             self.interactions.indicate_error()
         
     def main(self):

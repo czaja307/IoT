@@ -9,7 +9,7 @@ class CheckoutLogic:
         self._price += int(product["price"])
 
     def add_scanned_tag(self, tag) -> bool:
-        if tag in self._scanned_tags:
+        if str(tag) in self._scanned_tags:
             return False
         self._scanned_tags.append(str(tag))
         return True

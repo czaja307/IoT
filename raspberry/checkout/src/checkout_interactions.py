@@ -1,6 +1,8 @@
 from common.config import *
 from common import InteractionsInterface
 from common import RFIDInterface
+from common.SSD1331 import SSD1331
+from common.display_manager import DisplayManager
 
 try:
     import RPi.GPIO as GPIO
@@ -17,7 +19,9 @@ class CheckoutInteractions(InteractionsInterface):
         self.quitting = False
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
-        self.set_pixels_color((0,0,0))
+
+        display = SSD1331()
+        self.display_manager = DisplayManager(display)
         
     def assign_quit_action(self, action):
         super().assign_quit_action(action)
@@ -31,6 +35,15 @@ class CheckoutInteractions(InteractionsInterface):
             super().quit_sig_sent()
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")
+
+    def display_product_details(self, name, price):
+        self.display_manager.display_product_details(name, price)
+
+    def display_total_price(self, totalPrice):
+        self.display_manager.display_total_price(totalPrice)
+
+    def display_cancel_message(self):
+        self.display_manager.display_message("Your shopping was cancelled.")
 
     def redButtonPressed(self, channel):
         start_time = time.time()
@@ -56,21 +69,24 @@ class CheckoutInteractions(InteractionsInterface):
     def stop_buzzer(self):
         self.buzzer(False)
 
+    def buzz(self):
+        self.run_buzzer()
+        time.sleep(0.5)
+        self.stop_buzzer()
+
     def set_pixels_color(self, color):
         self.pixels.fill(color)
         self.pixels.show()
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
-        self.run_buzzer()
         time.sleep(0.5)
-        self.pixels.fill((0, 0, 0))
-        self.stop_buzzer()
+        self.set_pixels_color((0, 0, 0))
 
     def indicate_error(self):
         self.set_pixels_color((255, 0, 0))
         time.sleep(0.5)
-        self.pixels.fill((0, 0, 0))
+        self.set_pixels_color((0, 0, 0))
 
     def cleanup(self):
         self.set_pixels_color((0, 0, 0)) 
