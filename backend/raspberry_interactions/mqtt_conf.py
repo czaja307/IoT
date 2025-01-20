@@ -1,4 +1,4 @@
-MQTT_BROKER =  "localhost"  #enter a valid address
+MQTT_BROKER = "127.0.0.1"  # TODO: enter a valid address
 
 TERMINAL_TOPIC = "/terminal/"
 CHECKOUT_TOPIC = "/checkout/"

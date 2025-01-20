@@ -5,6 +5,7 @@ class InteractionsInterface(ABC):
         self._quit_action = None
         self._confirm_action = None
         self._cancel_action = None
+        self._card_read_action = None
 
     def assign_quit_action(self, action):
         self._quit_action = action
@@ -14,6 +15,18 @@ class InteractionsInterface(ABC):
 
     def assign_cancel_action(self, action):
         self._cancel_action = action
+
+    def assign_card_read_action(self, action):
+        self.on_card_read = action
+
+    def card_read(self, data):
+        if self._card_read_action:
+            try:
+                self._card_read_action(data)
+            except Exception as e:
+                print(f"Exception in card_read_action: {e}")
+        else:
+            print("No card read action assigned.")
 
     def quit_sig_sent(self):
         if self._quit_action:
