@@ -43,7 +43,7 @@ class CheckoutInteractions(InteractionsInterface):
         self.display_manager.display_total_price(totalPrice)
 
     def display_cancel_message(self):
-        self.display_cancel_message("Your shopping was cancelled.")
+        self.display_manager.display_message("Your shopping was cancelled.")
 
     def redButtonPressed(self, channel):
         start_time = time.time()
