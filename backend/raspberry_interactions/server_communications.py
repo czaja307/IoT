@@ -29,8 +29,10 @@ class ServerCommunications:
         self.client.publish(topic, message)
 
     def remove_device(self, topic):
-        segmented_topic = topic.split("/")
-        id = int(segmented_topic[:-1])
+        segmented_topic = [ t for t in topic.split("/") if t]
+        if len(segmented_topic) < 2:
+            return
+        id = int(segmented_topic[-1])
         if segmented_topic[0] in CHECKOUT_TOPIC:
             self.registered_checkouts.remove(id)
             self.registered_checkouts_count -= 1
@@ -55,7 +57,7 @@ class ServerCommunications:
             if response:
                 self.send_message(f"{msg_topic}{RESPONSE_SUFFIX}", response)
         elif FAREWELL_TOPIC in msg_topic:
-            self.remove_device(msg_topic)
+            self.remove_device(message_decoded)
 
 
     def set_on_terminal_msg(self, func):
@@ -107,6 +109,7 @@ class ServerCommunications:
         self.client.on_message = self.on_message
         self.client.loop_start()
         self.client.subscribe(GREETING_TOPIC)
+        self.client.subscribe(FAREWELL_TOPIC)
         print("mosquitto started")
 
     def stop_mosquitto(self):
