@@ -19,6 +19,6 @@ def read_terminals_products_assignments():
 
 
 @router.put("/products/", response_model=List[TerminalProductAssignment])
-def update_terminals_products_assignments(terminal_id: int, product_id: Optional[int] = None):
-    ServerCommunications().terminals_products_dict[terminal_id] = product_id
+def update_terminals_products_assignments(request: TerminalProductAssignment):
+    ServerCommunications().terminals_products_dict[request.terminal_id] = request.product_id
     return convert_to_terminal_product_assignments(ServerCommunications().terminals_products_dict)
