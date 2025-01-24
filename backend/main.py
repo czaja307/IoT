@@ -24,7 +24,8 @@ async def lifespan(_: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "*",  # probably should do some better matching but w/e ig
 ]
 
 # noinspection PyTypeChecker
