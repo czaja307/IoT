@@ -11,6 +11,7 @@ class CheckoutApp:
         self.communications = None
         self.interactions = None
         self.logic = None
+        self.state = 0 # State 1 means that an actual current state is checkout
 
     def quit_actions(self):
         print("Quitting app")
@@ -34,6 +35,7 @@ class CheckoutApp:
             if response == STATUS_NOK:
                 print("Checkout failed")
                 self.interactions.indicate_error()
+                self.logic.remove_last_scanned()
         
     def finish_checkout(self):
         tags = self.logic.get_tags()
@@ -62,14 +64,28 @@ class CheckoutApp:
             print("Item already scanned")
             self.interactions.buzz()
             self.interactions.indicate_error()
+
+    def cancel_action(self):
+        if self.state == 1:
+            return self.cancel_checkout
+        else:
+            return self.logic.remove_current_tag
+
+    def confirm_action(self):
+        if self.state == 1:
+            return self.finish_checkout
+        else:
+            def change_state():
+                self.state = 1
+            return change_state
         
     def main(self):
         self.interactions = CheckoutInteractions()
         self.communications = CheckoutCommunications()
         self.logic = CheckoutLogic()
 
-        self.interactions.assign_confirm_action(self.finish_checkout)
-        self.interactions.assign_cancel_action(self.cancel_checkout)
+        self.interactions.assign_confirm_action(self.confirm_action)
+        self.interactions.assign_cancel_action(self.cancel_action)
         self.interactions.assign_quit_action(self.quit_actions)
         self.interactions.assign_card_read_action(self.process_rfid_card)
 

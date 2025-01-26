@@ -102,3 +102,4 @@ class CheckoutInteractions(InteractionsInterface):
                 time.sleep(0.3)
         except KeyboardInterrupt:
             self.quit_sig_sent()
+
