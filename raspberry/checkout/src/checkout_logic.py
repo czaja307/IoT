@@ -55,3 +55,6 @@ class CheckoutLogic:
     def previous_product(self):
         if self._current_index > 0:
             self._current_index -= 1
+
+    def get_current_product(self):
+        return self._products[self._current_index]

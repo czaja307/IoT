@@ -78,6 +78,14 @@ class CheckoutApp:
             def change_state():
                 self.state = 1
             return change_state
+
+    def next(self):
+        self.logic.next_product()
+        self.interactions.display_product_details(self.logic.get_current_product())
+
+    def prev(self):
+        self.logic.previous_product()
+        self.interactions.display_product_details(self.logic.get_current_product())
         
     def main(self):
         self.interactions = CheckoutInteractions()
@@ -88,6 +96,8 @@ class CheckoutApp:
         self.interactions.assign_cancel_action(self.cancel_action)
         self.interactions.assign_quit_action(self.quit_actions)
         self.interactions.assign_card_read_action(self.process_rfid_card)
+        self.interactions.assign_next_action(self.next)
+        self.interactions.assign_next_action(self.prev)
 
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
