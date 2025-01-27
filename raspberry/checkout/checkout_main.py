@@ -11,6 +11,8 @@ class CheckoutApp:
         self.communications = None
         self.interactions = None
         self.logic = None
+        """State 1 means that an actual current state is checkout"""
+        self.state = 0
 
     def quit_actions(self):
         print("Quitting app")
@@ -45,12 +47,14 @@ class CheckoutApp:
         self.interactions.display_total_price(total)
         tags_string = "#".join(tags)
         self.communications.send_message(f"BUY#{tags_string}")
+        self.state = 0
         self.logic.reset_session()
 
     def cancel_checkout(self):
         print("Your shopping was cancelled.")
         self.interactions.display_cancel_message()
         self.logic.reset_session()
+        self.state = 0
 
     def process_rfid_card(self, uid):
         self.last_scanned_item = uid
@@ -62,16 +66,42 @@ class CheckoutApp:
             print("Item already scanned")
             self.interactions.buzz()
             self.interactions.indicate_error()
+
+    def cancel_action(self):
+        if self.state == 0:
+            self.cancel_checkout()
+        else:
+            self.logic.remove_current_tag()
+
+    def confirm_action(self):
+        if self.state == 1:
+            self.finish_checkout()
+        else:
+            self.state = 1
+            self.interactions.display_checkout_message()
+
+
+    def next(self):
+        if self.state == 1:
+            self.logic.next_product()
+            self.interactions.display_product_details(self.logic.get_current_product()['name'], self.logic.get_current_product()['price'])
+
+    def prev(self):
+        if self.state == 1:
+            self.logic.previous_product()
+            self.interactions.display_product_details(self.logic.get_current_product())
         
     def main(self):
         self.interactions = CheckoutInteractions()
         self.communications = CheckoutCommunications()
         self.logic = CheckoutLogic()
 
-        self.interactions.assign_confirm_action(self.finish_checkout)
-        self.interactions.assign_cancel_action(self.cancel_checkout)
+        self.interactions.assign_confirm_action(self.confirm_action)
+        self.interactions.assign_cancel_action(self.cancel_action)
         self.interactions.assign_quit_action(self.quit_actions)
         self.interactions.assign_card_read_action(self.process_rfid_card)
+        self.interactions.assign_next_action(self.next)
+        self.interactions.assign_next_action(self.prev)
 
         self.communications.assign_response_action(self.server_response_received)
         self.communications.on_start()
