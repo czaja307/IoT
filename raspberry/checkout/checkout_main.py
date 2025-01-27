@@ -68,7 +68,7 @@ class CheckoutApp:
             self.interactions.indicate_error()
 
     def cancel_action(self):
-        if self.state == 1:
+        if self.state == 0:
             self.cancel_checkout()
         else:
             self.logic.remove_current_tag()
