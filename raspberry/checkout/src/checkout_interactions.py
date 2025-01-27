@@ -59,6 +59,10 @@ class CheckoutInteractions(InteractionsInterface):
     def display_cancel_message(self):
         self.display_manager.display_message("Your shopping was cancelled.")
 
+    def display_checkout_message(self):
+        # I'm not sure if the whole thing will fit on the small display
+        self.display_manager.display_message(" SUMMARY - use encoder to see added products, red btn to remove, green to confirm order.")
+
     def redButtonPressed(self, channel):
         start_time = time.time()
         while not self.quitting and GPIO.input(channel) == GPIO.LOW:
@@ -99,10 +103,12 @@ class CheckoutInteractions(InteractionsInterface):
     def handle_encoder(self, channel):
         if channel == encoderLeft:
             print("Encoder Left")
-            self.on_prev()
+            if self.on_prev:
+                self.on_prev()
         elif channel == encoderRight:
             print("Encoder Right")
-            self.on_next()
+            if self.on_next:
+                self.on_next()
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))

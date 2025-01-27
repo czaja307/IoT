@@ -36,7 +36,6 @@ class CheckoutApp:
             if response == STATUS_NOK:
                 print("Checkout failed")
                 self.interactions.indicate_error()
-                self.logic.remove_last_scanned()
         
     def finish_checkout(self):
         tags = self.logic.get_tags()
@@ -48,12 +47,14 @@ class CheckoutApp:
         self.interactions.display_total_price(total)
         tags_string = "#".join(tags)
         self.communications.send_message(f"BUY#{tags_string}")
+        self.state = 0
         self.logic.reset_session()
 
     def cancel_checkout(self):
         print("Your shopping was cancelled.")
         self.interactions.display_cancel_message()
         self.logic.reset_session()
+        self.state = 0
 
     def process_rfid_card(self, uid):
         self.last_scanned_item = uid
@@ -68,25 +69,27 @@ class CheckoutApp:
 
     def cancel_action(self):
         if self.state == 1:
-            return self.cancel_checkout
+            self.cancel_checkout()
         else:
-            return self.logic.remove_current_tag
+            self.logic.remove_current_tag()
 
     def confirm_action(self):
         if self.state == 1:
-            return self.finish_checkout
+            self.finish_checkout()
         else:
-            def change_state():
-                self.state = 1
-            return change_state
+            self.state = 1
+            self.interactions.display_checkout_message()
+
 
     def next(self):
-        self.logic.next_product()
-        self.interactions.display_product_details(self.logic.get_current_product())
+        if self.state == 1:
+            self.logic.next_product()
+            self.interactions.display_product_details(self.logic.get_current_product()['name'], self.logic.get_current_product()['price'])
 
     def prev(self):
-        self.logic.previous_product()
-        self.interactions.display_product_details(self.logic.get_current_product())
+        if self.state == 1:
+            self.logic.previous_product()
+            self.interactions.display_product_details(self.logic.get_current_product())
         
     def main(self):
         self.interactions = CheckoutInteractions()

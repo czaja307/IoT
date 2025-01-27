@@ -20,8 +20,6 @@ class CheckoutLogic:
     def remove_last_scanned(self):
         if self._scanned_tags:
             self._scanned_tags = self._scanned_tags[:-1]
-            self._price -= int(self._products[-1]["price"])
-            self._products = self._products[:-1]
 
     def reset_session(self):
         self._price = 0
