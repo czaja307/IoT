@@ -11,7 +11,8 @@ class CheckoutApp:
         self.communications = None
         self.interactions = None
         self.logic = None
-        self.state = 0 # State 1 means that an actual current state is checkout
+        """State 1 means that an actual current state is checkout"""
+        self.state = 0
 
     def quit_actions(self):
         print("Quitting app")
