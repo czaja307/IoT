@@ -25,11 +25,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-interface TerminalProps {
-  id: number;
-  name: string;
-}
-export function SelectTerminal({terminals, terminal, setTerminal}: {terminals: TerminalProps[], terminal: string, setTerminal: (value: string) => void}) {
+// interface TerminalProps {
+//   id: number;
+//   name: string;
+// }
+export function SelectTerminal({terminals, terminal, setTerminal}: {terminals: string[], terminal: string, setTerminal: (value: string) => void}) {
   return (
     <Select
       onValueChange={(value: string) => setTerminal(value)}
@@ -37,12 +37,12 @@ export function SelectTerminal({terminals, terminal, setTerminal}: {terminals: T
     >
       <SelectTrigger>
         <SelectValue
-          placeholder={terminal ? (terminals.find((item) => item.id.toString() === terminal)?.name) : 'Wybierz terminal'}/>
+          placeholder={terminal ? terminal : 'Wybierz terminal'}/>
       </SelectTrigger>
       <SelectContent>
         {terminals.map((item, index) => (
-          <SelectItem value={item.id.toString()} key={index}>
-            {item.name}
+          <SelectItem value={item} key={index}>
+            {item}
           </SelectItem>
         ))}
       </SelectContent>
@@ -57,7 +57,7 @@ export function ProductAssign({productId} : { productId: number }) {
 
   const terminalsMutation = useMutation({
     mutationFn: (data: {terminal_id: number, product_id: number}) => {
-      return editData("/terminals/products", "PUT", { body: JSON.stringify(data) });
+      return editData("terminals/products", "PUT", { body: JSON.stringify(data) });
     },
     onSuccess: () => {
       alert(`Dodano powiązanie`);
@@ -85,10 +85,9 @@ export function ProductAssign({productId} : { productId: number }) {
     return <div>error</div>;
   }
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
+  const handleSubmit = () => {
 
-    if (!terminal.trim()) {
+    if (!terminal) {
       alert("All fields are required");
       return;
     }
@@ -122,4 +121,4 @@ export function ProductAssign({productId} : { productId: number }) {
   )
 }
 
-const fetchProducts = async () => fetchData<TerminalProps[]>("terminals/");
+const fetchProducts = async () => fetchData<string[]>("terminals/");

@@ -9,8 +9,8 @@ class DisplayManager:
         self.display.clear()
 
         try:
-            self.font_large = ImageFont.truetype('/raspberry/common/Font.ttf', 20)
-            self.font_small = ImageFont.truetype('/raspberry/common/Font.ttf', 10)
+            self.font_small = ImageFont.truetype('./common/Font.ttf', 10)
+            self.font_large = ImageFont.truetype('./common/Font.ttf', 15)
         except IOError:
             raise Exception("Nie znaleziono pliku czcionki 'Font.ttf'")
 
@@ -18,8 +18,8 @@ class DisplayManager:
         image = Image.new("RGB", (self.display.width, self.display.height), "BLACK")
         draw = ImageDraw.Draw(image)
 
-        draw.text((5, 5), f"Product: {name}", font=self.font_small, fill="WHITE")
-        draw.text((5, 25), f"Price: {price:.2f} PLN", font=self.font_small, fill="WHITE")
+        draw.text((5, 5), f"Produkt: {name}", font=self.font_small, fill="WHITE")
+        draw.text((5, 25), f"Cena: {price:.2f} PLN", font=self.font_small, fill="WHITE")
 
         self.display.ShowImage(image, 0, 0)
 
@@ -27,7 +27,7 @@ class DisplayManager:
         image = Image.new("RGB", (self.display.width, self.display.height), "BLACK")
         draw = ImageDraw.Draw(image)
 
-        draw.text((5, 15), f"Total: {totalPrice:.2f} PLN", font=self.font_large, fill="WHITE")
+        draw.text((5, 15), f"Suma: {totalPrice:.2f} PLN", font=self.font_small, fill="WHITE")
 
         self.display.ShowImage(image, 0, 0)
 
@@ -35,7 +35,7 @@ class DisplayManager:
         image = Image.new("RGB", (self.display.width, self.display.height), "BLACK")
         draw = ImageDraw.Draw(image)
 
-        draw.text((5, 15), f"{message}", font=self.font_small, fill="WHITE")
+        draw.text((0, 0), f"{message}", font=self.font_large, fill="WHITE")
 
         self.display.ShowImage(image, 0, 0)
 

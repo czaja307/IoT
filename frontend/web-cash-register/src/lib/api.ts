@@ -8,7 +8,7 @@ export async function fetchData<T>(
     const token = localStorage.getItem('token');
     // const url = apiURL || NEXT_PUBLIC_API_URL;
     // console.log(`${url}/${endpoint}`)
-    const response = await fetch(`http://localhost:8000/${endpoint}`, {
+    const response = await fetch(`http://10.108.33.106:8000/${endpoint}`, {
         ...options,
         headers: {
             'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export async function editData(
     options?: RequestInit
 ) {
     const token = localStorage.getItem('token');
-    const response = await fetch(`http://localhost:8000/${endpoint}`, {
+    const response = await fetch(`http://10.108.33.106:8000/${endpoint}`, {
         method: method,
         ...options,
         headers: {

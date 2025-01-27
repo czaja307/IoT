@@ -17,7 +17,7 @@ class InteractionsInterface(ABC):
         self._cancel_action = action
 
     def assign_card_read_action(self, action):
-        self.on_card_read = action
+        self.card_read_action = action
 
     def card_read(self, data):
         if self._card_read_action:

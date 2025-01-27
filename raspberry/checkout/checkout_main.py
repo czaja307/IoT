@@ -89,7 +89,7 @@ class CheckoutApp:
     def prev(self):
         if self.state == 1:
             self.logic.previous_product()
-            self.interactions.display_product_details(self.logic.get_current_product())
+            self.interactions.display_product_details(self.logic.get_current_product()['name'], self.logic.get_current_product()['price'])
         
     def main(self):
         self.interactions = CheckoutInteractions()

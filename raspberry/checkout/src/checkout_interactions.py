@@ -5,7 +5,7 @@ from common.SSD1331 import SSD1331
 from common.display_manager import DisplayManager
 from paho.mqtt.subscribe import callback
 
-from raspberry.common.config import encoderLeft, encoderRight
+from common.config import encoderLeft, encoderRight
 
 try:
     import RPi.GPIO as GPIO
@@ -29,6 +29,9 @@ class CheckoutInteractions(InteractionsInterface):
 
         self.on_next = None
         self.on_prev = None
+
+        self.encoder_left_previous_state = GPIO.input(encoderLeft)
+        self.encoder_right_previous_state = GPIO.input(encoderRight)
 
     def assign_next_action(self, action):
         self.on_next = action
@@ -57,7 +60,7 @@ class CheckoutInteractions(InteractionsInterface):
         self.display_manager.display_total_price(totalPrice)
 
     def display_cancel_message(self):
-        self.display_manager.display_message("Your shopping was cancelled.")
+        self.display_manager.display_message("Cancelled")
 
     def display_checkout_message(self):
         # I'm not sure if the whole thing will fit on the small display
@@ -97,18 +100,24 @@ class CheckoutInteractions(InteractionsInterface):
         self.pixels.show()
 
     def setup_encoder(self):
-        GPIO.add_event_detect(encoderLeft, GPIO.BOTH, callback=self.handle_encoder, bouncetime=50)
-        GPIO.add_event_detect(encoderRight, GPIO.BOTH, callback=self.handle_encoder, bouncetime=50)
+        GPIO.add_event_detect(encoderLeft, GPIO.FALLING, callback=self.handle_encoder, bouncetime=50)
+        GPIO.add_event_detect(encoderRight, GPIO.FALLING, callback=self.handle_encoder, bouncetime=50)
 
     def handle_encoder(self, channel):
-        if channel == encoderLeft:
-            print("Encoder Left")
-            if self.on_prev:
-                self.on_prev()
-        elif channel == encoderRight:
+        encoder_left_current_state = GPIO.input(encoderLeft)
+        encoder_right_current_state = GPIO.input(encoderRight)
+
+        if (self.encoder_left_previous_state == 1 and encoder_left_current_state == 0):
             print("Encoder Right")
             if self.on_next:
                 self.on_next()
+        elif (self.encoder_right_previous_state == 1 and encoder_right_current_state == 0):
+            print("Encoder Left")
+            if self.on_prev:
+                self.on_prev()
+
+        self.encoder_left_previous_state = encoder_left_current_state
+        self.encoder_right_previous_state = encoder_right_current_state
 
     def indicate_success(self):
         self.set_pixels_color((0, 255, 0))
