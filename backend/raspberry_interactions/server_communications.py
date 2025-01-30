@@ -36,9 +36,13 @@ class ServerCommunications:
         if segmented_topic[0] in CHECKOUT_TOPIC:
             self.registered_checkouts.remove(id)
             self.registered_checkouts_count -= 1
+            self.client.unsubscribe(f"{CHECKOUT_TOPIC}{id}/")
+            self.subscribed_topics.remove(f"{CHECKOUT_TOPIC}{id}/")
         elif segmented_topic[0] in TERMINAL_TOPIC:
             self.registered_terminals.remove(id)
             self.registered_terminals_count -= 1
+            self.client.unsubscribe(f"{TERMINAL_TOPIC}{id}/")
+            self.subscribed_topics.remove(f"{TERMINAL_TOPIC}{id}/")
             if id in self.terminals_products_dict:
                 del self.terminals_products_dict[id]
 
