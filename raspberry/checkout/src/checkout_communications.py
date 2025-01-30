@@ -51,7 +51,7 @@ class CheckoutCommunications(CommunicationsInterface):
         print("mosquitto ")
 
     def stop_mosquitto(self):
-        self.client.unsubscribe(self.topic)
+        self.client.unsubscribe(f"{self.topic}{RESPONSE_SUFFIX}")
         self.client.publish(FAREWELL_TOPIC, self.topic)
         self.client.loop_stop()
         self.client.disconnect()
