@@ -7,15 +7,22 @@ class CheckoutLogic:
         self._products = []
         self._current_index = 0
 
+    def get_id(self):
+        return self._current_index + 1
+
     def add_product(self, product):
         self._price += int(product["price"])
         self._products.append(product)
+        self._current_index = len(self._products) - 1
 
     def add_scanned_tag(self, tag) -> bool:
         if str(tag) in self._scanned_tags:
             return False
         self._scanned_tags.append(str(tag))
         return True
+
+    def is_cart_empty(self):
+        return len(self._scanned_tags) == 0
     
     def remove_last_scanned(self):
         if self._scanned_tags:

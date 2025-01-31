@@ -14,12 +14,12 @@ class DisplayManager:
         except IOError:
             raise Exception("Nie znaleziono pliku czcionki 'Font.ttf'")
 
-    def display_product_details(self, name, price):
+    def display_product_details(self, num, name, price):
         image = Image.new("RGB", (self.display.width, self.display.height), "BLACK")
         draw = ImageDraw.Draw(image)
 
-        draw.text((5, 5), f"Produkt: {name}", font=self.font_small, fill="WHITE")
-        draw.text((5, 25), f"Cena: {price:.2f} PLN", font=self.font_small, fill="WHITE")
+        draw.text((5, 5), f"{num}. Produkt: {name}", font=self.font_small, fill="WHITE")
+        draw.text((5, 25), f"Cena: {price} PLN", font=self.font_small, fill="WHITE")
 
         self.display.ShowImage(image, 0, 0)
 
@@ -27,15 +27,16 @@ class DisplayManager:
         image = Image.new("RGB", (self.display.width, self.display.height), "BLACK")
         draw = ImageDraw.Draw(image)
 
-        draw.text((5, 15), f"Suma: {totalPrice:.2f} PLN", font=self.font_small, fill="WHITE")
+        draw.text((5, 15), f"Suma: {totalPrice} PLN", font=self.font_small, fill="WHITE")
 
         self.display.ShowImage(image, 0, 0)
 
-    def display_message(self, message):
+    def display_message(self, message, message2=""):
         image = Image.new("RGB", (self.display.width, self.display.height), "BLACK")
         draw = ImageDraw.Draw(image)
 
-        draw.text((0, 0), f"{message}", font=self.font_large, fill="WHITE")
+        draw.text((0, 0), f"{message}", font=self.font_small, fill="WHITE")
+        draw.text((0, 15), f"{message2}", font=self.font_small, fill="WHITE")
 
         self.display.ShowImage(image, 0, 0)
 
