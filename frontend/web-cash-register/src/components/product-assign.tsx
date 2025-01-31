@@ -25,10 +25,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-// interface TerminalProps {
-//   id: number;
-//   name: string;
-// }
 export function SelectTerminal({terminals, terminal, setTerminal}: {terminals: string[], terminal: string, setTerminal: (value: string) => void}) {
   return (
     <Select

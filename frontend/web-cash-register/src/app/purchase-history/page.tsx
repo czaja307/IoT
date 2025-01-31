@@ -1,11 +1,10 @@
 "use client";
 import { ProductProps } from "@/lib/types";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { fetchData } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ProductAssign } from "@/components/product-assign";
+import { format } from "date-fns";
 
 interface ProductQuantity {
   product: ProductProps;
@@ -46,7 +45,7 @@ export default function Home() {
           <Card key={purchase.id} className="w-[650px]">
             <CardHeader>
               <CardTitle>Total: {purchase.total_price}zł</CardTitle>
-              <CardDescription>{new Date(purchase.created_at).toString()}</CardDescription>
+              <CardDescription>{format(new Date(purchase.created_at), "d/MM/y")}</CardDescription>
             </CardHeader>
             {purchase.products.map((item: ProductQuantity) => (
                 <Card key={item.product.id} className="w-[600px]">
