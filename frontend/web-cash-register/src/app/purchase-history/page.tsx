@@ -45,7 +45,7 @@ export default function Home() {
           <Card key={purchase.id} className="w-[650px]">
             <CardHeader>
               <CardTitle>Total: {purchase.total_price}zł</CardTitle>
-              <CardDescription>{format(new Date(purchase.created_at), "d/MM/y")}</CardDescription>
+              <CardDescription>{format(new Date(purchase.created_at), "d/MM/y HH:m:s")}</CardDescription>
             </CardHeader>
             {purchase.products.map((item: ProductQuantity) => (
                 <Card key={item.product.id} className="w-[600px]">
