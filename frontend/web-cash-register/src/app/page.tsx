@@ -83,4 +83,5 @@ export default function Home() {
   );
 }
 
+
 const fetchProducts = async () => fetchData<ProductProps[]>("products");

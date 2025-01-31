@@ -25,6 +25,7 @@ export default function RootLayout({
             <Link className={"hover:text-black"} href="/">Produkty</Link>
             <Link className={"hover:text-black"} href="/add-product">Dodaj produkt</Link>
             <Link className={"hover:text-black"} href="/storage">Magazyn</Link>
+            <Link className={"hover:text-black"} href="/purchase-history">Historia zakupów</Link>
           </div>
         </div>
       </nav>
