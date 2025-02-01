@@ -21,6 +21,8 @@ class CheckoutInteractions(InteractionsInterface):
         super().__init__()
 
         self.quitting = False
+        self.was_red_released = True
+        self.was_green_released = True
         self.rfid = RFIDInterface()
         self.pixels = neopixel.NeoPixel(board.D18, 8, brightness=0.3, auto_write=False)
 
@@ -53,8 +55,8 @@ class CheckoutInteractions(InteractionsInterface):
         except Exception as e:
             print(f"Exception occurred in quit_sig_sent: {e}")
 
-    def display_product_details(self, name, price):
-        self.display_manager.display_product_details(name, price)
+    def display_product_details(self, num, name, price):
+        self.display_manager.display_product_details(num, name, price)
 
     def display_total_price(self, totalPrice):
         self.display_manager.display_total_price(totalPrice)
@@ -64,22 +66,24 @@ class CheckoutInteractions(InteractionsInterface):
 
     def display_checkout_message(self):
         # I'm not sure if the whole thing will fit on the small display
-        self.display_manager.display_message(" SUMMARY - use encoder to see added products, red btn to remove, green to confirm order.")
+        self.display_manager.display_message("SUMMARY", "encoder-scroll.")
 
     def redButtonPressed(self, channel):
         start_time = time.time()
         while not self.quitting and GPIO.input(channel) == GPIO.LOW:
             if time.time() - start_time >= 1:
                 self.quit_sig_sent()
+        
         if not self.quitting and GPIO.input(channel) == GPIO.HIGH:
             self.cancel_sig_sent()
 
     def greenButtonPressed(self, channel):
         self.confirm_sig_sent()
+
        
     def setupButtons(self):
-        GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=200)
-        GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=self.greenButtonPressed, bouncetime=200)
+        GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=700)
+        GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=self.greenButtonPressed, bouncetime=700)
 
     def buzzer(self, state):
         GPIO.output(buzzerPin, not state)
