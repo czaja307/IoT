@@ -82,8 +82,8 @@ class CheckoutInteractions(InteractionsInterface):
 
        
     def setupButtons(self):
-        GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=1000)
-        GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=self.greenButtonPressed, bouncetime=1000)
+        GPIO.add_event_detect(buttonRed, GPIO.FALLING, callback=self.redButtonPressed, bouncetime=700)
+        GPIO.add_event_detect(buttonGreen, GPIO.FALLING, callback=self.greenButtonPressed, bouncetime=700)
 
     def buzzer(self, state):
         GPIO.output(buzzerPin, not state)
