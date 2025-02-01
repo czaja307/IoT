@@ -18,6 +18,7 @@ class CheckoutApp:
     def quit_actions(self):
         print("Quitting app")
         self.logic.reset_session()
+        self.interactions.display_manager.display_message("Wyłączono.")
         self.communications.on_cleanup()
         quit()
 
