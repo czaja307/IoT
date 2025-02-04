@@ -45,6 +45,7 @@ class CheckoutApp:
         self.interactions.display_manager.display_message("Zacznij skanowanie.")
         
     def finish_checkout(self):
+        self.interactions.checking_out = True
         tags = self.logic.get_tags()
         if len(tags) == 0:
             print("Cannot checkout an empty cart. Scan an item first.")
@@ -59,6 +60,7 @@ class CheckoutApp:
         self.logic.reset_session()
         time.sleep(1)
         self.start_checkout()
+        self.interactions.checking_out = False
 
     def cancel_checkout(self):
         print("Your shopping was cancelled.")
@@ -94,6 +96,7 @@ class CheckoutApp:
         print("Zielone i jazda")
         if self.state == 1:
             self.finish_checkout()
+            self.state = 0
         else:
             self.state = 1
             self.interactions.display_checkout_message()
