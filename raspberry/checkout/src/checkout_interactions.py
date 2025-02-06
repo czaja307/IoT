@@ -21,6 +21,7 @@ class CheckoutInteractions(InteractionsInterface):
         super().__init__()
 
         self.quitting = False
+        self.checking_out = False
         self.was_red_released = True
         self.was_green_released = True
         self.rfid = RFIDInterface()
@@ -78,7 +79,8 @@ class CheckoutInteractions(InteractionsInterface):
             self.cancel_sig_sent()
 
     def greenButtonPressed(self, channel):
-        self.confirm_sig_sent()
+        if not self.checking_out:
+            self.confirm_sig_sent()
 
        
     def setupButtons(self):
